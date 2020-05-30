@@ -26,11 +26,11 @@ namespace Ex03.GarageLogic
         }
 
         public Car(
-            eColor i_CarColor,
-            eNumberOfDoors i_NumberOfDoors,
             string i_LicenseNumber,
             string i_ModelName,
             float i_EnergyPercentageLeft,
+            eColor i_CarColor,
+            eNumberOfDoors i_NumberOfDoors,
             float i_CurrentAirPressure,
             string i_WheelManufacturer,
             Engine.eEngineType i_EngineType,
@@ -38,7 +38,6 @@ namespace Ex03.GarageLogic
             float i_CurrentEnergyAmount)
             : base(i_LicenseNumber, i_ModelName, i_EnergyPercentageLeft)
         {
-
             m_CarColor = i_CarColor;
             m_NumberOfDoors = i_NumberOfDoors;
             InitializeWheelsList(eNumberOfWheels.Car, i_WheelManufacturer, i_CurrentAirPressure, Wheel.eMaxAirPressure.Car);

@@ -8,9 +8,13 @@ namespace Ex03.ConsoleUI
     {
         public static void Main()
         {
-            UserInterface GarageConsoleUI = new UserInterface();
+            //UserInterface GarageConsoleUI = new UserInterface();
 
-            GarageConsoleUI.SelectFromUserMenu();
+            //GarageConsoleUI.SelectFromUserMenu();
+
+            string a = "Hello";
+
+            Console.WriteLine(string.IsNullOrEmpty(a));
         }
     }
 }

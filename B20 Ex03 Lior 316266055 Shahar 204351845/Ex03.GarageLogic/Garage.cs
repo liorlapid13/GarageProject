@@ -7,13 +7,21 @@ namespace Ex03.GarageLogic
     public class Garage
     {
         private Dictionary<string, VehicleInformation> m_VehicleDictionary;
-
+        
         public Garage()
         {
             m_VehicleDictionary = new Dictionary<string, VehicleInformation>();
         }
 
-        private void addVehicleToGarage(string i_LicenseNumber, string i_OwnerName, string i_OwnerPhoneNumber, Vehicle i_Vehicle)
+        public Dictionary<string, VehicleInformation> VehicleDictionary
+        {
+            get
+            {
+                return m_VehicleDictionary;
+            }
+        }
+
+        public void AddVehicleToGarage(string i_LicenseNumber, string i_OwnerName, string i_OwnerPhoneNumber, Vehicle i_Vehicle)
         {
             bool isVehicleInGarage = false;
 
@@ -23,6 +31,7 @@ namespace Ex03.GarageLogic
                 {
                     item.Value.VehicleStatus = VehicleInformation.eVehicleStatus.InService;
                     isVehicleInGarage = true;
+                    break;
                 }
             }
 
@@ -34,14 +43,6 @@ namespace Ex03.GarageLogic
             else
             {
                 throw new ArgumentException("Vehicle already in garage, status changed to 'InService'");
-            }
-        }
-
-        public Dictionary<string, VehicleInformation> VehicleDictionary
-        {
-            get
-            {
-                return m_VehicleDictionary;
             }
         }
 

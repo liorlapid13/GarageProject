@@ -38,6 +38,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="InputValidation.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="UserInterface.cs" />
   </ItemGroup>

@@ -1,13 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection.Emit;
 using System.Text;
 
 namespace Ex03.GarageLogic
 {
     public class ElectricEngine : Engine
     {
-        public ElectricEngine(float i_CurrentBatteryTimeLeft, float i_MaxBatteryCapacity)
-            : base(i_MaxBatteryCapacity, i_CurrentBatteryTimeLeft)
+        public enum eElectricEngineCapacityInMinutes
+        {
+            Motorcycle = 72,
+            Car = 126
+        }
+
+        public ElectricEngine(float i_CurrentBatteryTimeLeft, eElectricEngineCapacityInMinutes i_MaxBatteryCapacity)
+            : base(((float)i_MaxBatteryCapacity) / 60, i_CurrentBatteryTimeLeft)
         {
 
         }

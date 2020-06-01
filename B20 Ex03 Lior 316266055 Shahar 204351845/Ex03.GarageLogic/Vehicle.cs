@@ -7,11 +7,11 @@ namespace Ex03.GarageLogic
 {
     public abstract class Vehicle
     {
-        private readonly string r_LicenseNumber;
-        private readonly string r_ModelName;
-        private float m_EnergyPercentageLeft;
-        private List<Wheel> m_Wheels;
-        private Engine m_Engine;
+        protected readonly string r_LicenseNumber;
+        protected string m_ModelName;
+        protected float m_EnergyPercentageLeft;
+        protected List<Wheel> m_Wheels;
+        protected Engine m_Engine;
 
         public enum eNumberOfWheels
         {
@@ -20,14 +20,38 @@ namespace Ex03.GarageLogic
             Truck = 16
         }
 
-        protected Vehicle(string i_LicenseNumber, string i_ModelName, float i_EnergyPercentageLeft)
+        protected Vehicle(string i_LicenseNumber)
         {
             r_LicenseNumber = i_LicenseNumber;
-            r_ModelName = i_ModelName;
-            m_EnergyPercentageLeft = i_EnergyPercentageLeft;
         }
 
-        protected void InitializeWheelsList(
+        public string ModelName
+        {
+            get
+            {
+                return m_ModelName;
+            }
+
+            set
+            {
+                m_ModelName = value;
+            }
+        }
+
+        public float EnergyPercentageLeft
+        {
+            get
+            {
+                return m_EnergyPercentageLeft;
+            }
+
+            set
+            {
+                m_EnergyPercentageLeft = value;
+            }
+        }
+
+        public void InitializeWheelsList(
             eNumberOfWheels i_NumberOfWheels,
             string i_Manufacturer,
             float i_CurrentAirPressure,
@@ -41,20 +65,6 @@ namespace Ex03.GarageLogic
             }
         }
 
-        protected void InitializeEngine(
-            Engine.eEngineType i_EngineType,
-            float i_MaxEnergyCapacity,
-            float i_CurrentEnergyAmount,
-            GasEngine.eGasType i_GasType)
-        {
-            if(i_EngineType == Engine.eEngineType.Gas)
-            {
-                m_Engine = new GasEngine(i_GasType, i_MaxEnergyCapacity, i_CurrentEnergyAmount);
-            }
-            else
-            {
-                m_Engine = new ElectricEngine(i_MaxEnergyCapacity, i_CurrentEnergyAmount);
-            }
-        }
+        public abstract void InitializeEngine(Engine.eEngineType i_EngineType, float i_CurrentEnergyAmount);
     }
 }

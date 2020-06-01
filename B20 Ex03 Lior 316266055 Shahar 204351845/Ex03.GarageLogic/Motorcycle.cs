@@ -18,27 +18,10 @@ namespace Ex03.GarageLogic
             B
         }
 
-        public Motorcycle(
-            eLicenseType i_LicenseType,
-            int i_EngineCapacity,
-            string i_LicenseNumber,
-            string i_ModelName,
-            float i_EnergyPercentageLeft,
-            string i_WheelsManufacturer,
-            float i_CurrentAirPressure,
-            Engine.eEngineType i_EngineType,
-            float i_MaxEnergyCapacity,
-            float i_CurrentEnergyAmount)
-            : base(i_LicenseNumber, i_ModelName, i_EnergyPercentageLeft)
+        public Motorcycle(string i_LicenseNumber)
+            : base(i_LicenseNumber)
         {
-            m_LicenseType = i_LicenseType;
-            m_EngineCapacity = i_EngineCapacity;
-            InitializeWheelsList(
-                eNumberOfWheels.Motorcycle,
-                i_WheelsManufacturer,
-                i_CurrentAirPressure,
-                Wheel.eMaxAirPressure.Motorcycle);
-            InitializeEngine(i_EngineType, i_MaxEnergyCapacity, i_CurrentEnergyAmount, GasEngine.eGasType.Octan95);
+            
         }
 
         public eLicenseType LicenseType
@@ -57,6 +40,18 @@ namespace Ex03.GarageLogic
             set
             {
                 m_EngineCapacity = value;
+            }
+        }
+
+        public override void InitializeEngine(Engine.eEngineType i_EngineType, float i_CurrentEnergyAmount)
+        {
+            if (i_EngineType == Engine.eEngineType.Gas)
+            {
+                m_Engine = new GasEngine(GasEngine.eGasType.Octan95, i_CurrentEnergyAmount, GasEngine.eGasCapacity.Motorcycle);
+            }
+            else
+            {
+                m_Engine = new ElectricEngine(i_CurrentEnergyAmount, ElectricEngine.eElectricEngineCapacityInMinutes.Motorcycle);
             }
         }
     }

@@ -7,31 +7,25 @@ namespace Ex03.GarageLogic
 {
     public class Truck : Vehicle
     {
-        private readonly float r_LoadCapacity;
+        private float m_LoadCapacity;
         private bool m_IsCarryingHazardousMaterials;
 
-        public Truck(
-            float i_LoadCapacity,
-            bool i_IsCarryingHazardousMaterials,
-            string i_LicenseNumber,
-            string i_ModelName,
-            float i_EnergyPercentageLeft,
-            string i_WheelsManufacturer,
-            float i_CurrentAirPressure,
-            float i_CurrentGasAmount)
-            : base(i_LicenseNumber, i_ModelName, i_EnergyPercentageLeft)
+        public Truck(string i_LicenseNumber)
+            : base(i_LicenseNumber)
         {
-            r_LoadCapacity = i_LoadCapacity;
-            m_IsCarryingHazardousMaterials = i_IsCarryingHazardousMaterials;
-            InitializeWheelsList(eNumberOfWheels.Truck, i_WheelsManufacturer, i_CurrentAirPressure, Wheel.eMaxAirPressure.Truck);
-            InitializeEngine(Engine.eEngineType.Gas, (float)GasEngine.eGasCapacity.Truck, i_CurrentGasAmount, GasEngine.eGasType.Soler);
+           
         }
 
         public float LoadCapacity
         {
             get
             {
-                return r_LoadCapacity;
+                return m_LoadCapacity;
+            }
+
+            set
+            {
+                m_LoadCapacity = value;
             }
         }
 
@@ -46,6 +40,11 @@ namespace Ex03.GarageLogic
             {
                 m_IsCarryingHazardousMaterials = value;
             }
+        }
+
+        public override void InitializeEngine(Engine.eEngineType i_EngineType, float i_CurrentEnergyAmount)
+        {
+            m_Engine = new GasEngine(GasEngine.eGasType.Soler, i_CurrentEnergyAmount, GasEngine.eGasCapacity.Truck);
         }
     }
 }

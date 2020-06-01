@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using Ex03.GarageLogic;
@@ -51,7 +52,8 @@ namespace Ex03.ConsoleUI
 
         private void getNewVehicleInformationAndInsertToGarage()
         {
-            string ownerName, ownerPhoneNumber, licenseNumber, modelName;
+            string ownerName, ownerPhoneNumber, licenseNumber, modelName, wheelManufacturer;
+            float currentAirPressure;
             VehicleCreator.eSupportedVehicles vehicleType;
 
             receiveVehicleOwnerInformation(out ownerName, out ownerPhoneNumber);
@@ -59,54 +61,28 @@ namespace Ex03.ConsoleUI
 
             receiveVehicleType(out vehicleType);
             receiveBasicVehicleInformation(out licenseNumber, out modelName);
-            //receiveWheelInformation(out currentAirPressure, out wheelManufacturer); //TODO
+            receiveWheelInformation(out currentAirPressure, out wheelManufacturer, vehicleType);
 
-            //Vehicle newVehicle;
+            Vehicle newVehicle = VehicleCreator.CreateNewVehicle(licenseNumber, vehicleType);
 
             switch (vehicleType)
             {
-                /*
-                 *  case CAR:
-                 *      newVehicle = receiveInformationAndCreateCar(licenseNumber, modelName, wheelManufacturer, currentAirPressure);
-                 *
-                 *  case MOTORCYCLE:
-                 *      newVehicle = receiveInformationAndCreateMotorcycle(licenseNumber, modelName, wheelManufacturer, currentAirPressure);
-                 *
-                 *  case TRUCK:
-                 *      newVehicle = receiveInformationAndCreateTruck(licenseNumber, modelName, wheelManufacturer, currentAirPressure);
-                 */
+                case VehicleCreator.eSupportedVehicles.Car:
+                    receiveAndInsertCarInformation((Car)newVehicle, modelName, wheelManufacturer, currentAirPressure);
+                    break;
+                
+
+
+                    /*
+                     *  case MOTORCYCLE:
+                     *      receiveAndInsertMotorcycleInformation(newVehicle, modelName, wheelManufacturer, currentAirPressure);
+                     *      break;
+                     *
+                     *  case TRUCK:
+                     *      receiveAndInsertTruckInformation(newVehicle, modelName, wheelManufacturer, currentAirPressure);
+                     *      break;
+                     */
             }
-
-            Console.Write("Please enter your wheels' manufacturer: ");
-            string wheelManufacturer = Console.ReadLine();
-
-            Console.Write("How much air pressure is in your wheels? ");
-            string currentAirPressure = Console.ReadLine();
-
-            Console.Write(
-@"Vehicle Color
-1   Red
-2   White
-3   Black
-4   Silver
-What color is your vehicle? ");
-            string vehicleColor = Console.ReadLine();
-
-            Console.Write(
-@"Vehicle Doors
-2   Two
-3   Three
-4   Four
-5   Five
-How many doors does your vehicle have? ");
-            string numberOfDoors = Console.ReadLine();
-
-            Console.Write(
-@"Engine type
-1   Gas Engine
-2   Electric Engine
-Please enter the type of your engine: ");
-            string engineType = Console.ReadLine();
 
             Console.Write(
 @"License Type
@@ -143,7 +119,7 @@ Is your truck carrying hazardous materials? ");
             {
                 Console.Write("Name: ");
                 ownerName = Console.ReadLine();
-                isValidName = checkNameInput(ownerName);
+                isValidName = InputValidation.CheckNameInput(ownerName);
                 
             }
             while(!isValidName);
@@ -154,7 +130,7 @@ Is your truck carrying hazardous materials? ");
             {
                 Console.Write("Phone number: ");
                 ownerPhoneNumber = Console.ReadLine();
-                isValidPhoneNumber = checkPhoneNumberInput(ownerPhoneNumber);
+                isValidPhoneNumber = InputValidation.CheckPhoneNumberInput(ownerPhoneNumber);
             }
             while(!isValidPhoneNumber);
 
@@ -177,14 +153,14 @@ Please enter your vehicle type: ");
 
         private void receiveBasicVehicleInformation(out string o_LicenseNumber, out string o_ModelName)
         {
-            bool isValidLicenseNumber = false, isValidModelName = false;
+            bool isValidLicenseNumber, isValidModelName;
             string licenseNumber, vehicleModel;
 
             Console.Write("Please enter your license number: ");
             do
             {
                 licenseNumber = Console.ReadLine();
-                isValidLicenseNumber = checkLicenseNumberInput(licenseNumber);
+                isValidLicenseNumber = InputValidation.CheckLicenseNumberInput(licenseNumber);
             }
             while(!isValidLicenseNumber);
 
@@ -201,79 +177,127 @@ Please enter your vehicle type: ");
             o_ModelName = vehicleModel;
         }
 
-        private bool checkNameInput(string i_Name)
+        private void receiveWheelInformation(out float o_CurrentAirPressure, out string o_WheelManufacturer, VehicleCreator.eSupportedVehicles i_VehicleType)
         {
-            bool isValidName = true;
+            bool isValidWheelManufacturer, isValidCurrentAirPressure;
+            string currentAirPressure, wheelManufacturer;
 
-            if(i_Name.Length == 0)
-            {
-                Console.Write("You must enter a name, please try again: ");
-                isValidName = false;
-            }
-            else
-            {
-                foreach(char c in i_Name)
-                {
-                    if(!char.IsLetter(c) && c != ' ')
-                    {
-                        Console.Write("Name must only include letters or spaces, please try again: ");
-                        isValidName = false;
-                        break;
-                    }
-                }
-            }
+            Console.WriteLine("Please enter your vehicle's wheels information");
 
-            return isValidName;
+            Console.Write("Current air pressure: ");
+
+            do
+            {
+                currentAirPressure = Console.ReadLine();
+                isValidCurrentAirPressure = InputValidation.CheckAirPressureInput(currentAirPressure, i_VehicleType);
+            }
+            while(!isValidCurrentAirPressure);
+
+            o_CurrentAirPressure = float.Parse(currentAirPressure);
+
+            Console.Write("Manufacturer: ");
+
+            do
+            {
+                wheelManufacturer = Console.ReadLine();
+                isValidWheelManufacturer = string.IsNullOrEmpty(wheelManufacturer);
+            }
+            while (!isValidWheelManufacturer);
+
+            o_WheelManufacturer = wheelManufacturer;
         }
 
-        private bool checkPhoneNumberInput(string i_PhoneNumber)
+        private void receiveAndInsertCarInformation(Car i_NewCar, string i_ModelName, string i_WheelManufacturer, float i_CurrentAirPressure)
         {
-            bool isValidPhoneNumber = true;
+            Console.WriteLine("Please enter your car information");
+            Engine.eEngineType engineType;
+            float currentEnergyAmount, currentEnergyPercentage;
 
-            if(i_PhoneNumber.Length != 10)
-            {
-                Console.Write("Phone number must be 10-digits long, please try again: ");
-                isValidPhoneNumber = false;
-            }
-            else
-            {
-                foreach(char c in i_PhoneNumber) 
-                {
-                    if(!char.IsDigit(c)) 
-                    {
-                        Console.Write("Phone number must include only digits, please try again: ");
-                        isValidPhoneNumber = false;
-                        break;
-                    }
-                }
-            }
+            receiveEngineInformation(out engineType, out currentEnergyAmount, out currentEnergyPercentage, VehicleCreator.eSupportedVehicles.Car);
+
+            Console.Write(
+@"Vehicle Color
+1   Red
+2   White
+3   Black
+4   Silver
+What color is your car? ");
+            Car.eColor carColor = (Car.eColor)receiveEnumInput<Car.eColor>();
+
+            Console.Write(
+@"Vehicle Doors
+2   Two
+3   Three
+4   Four
+5   Five
+How many doors does your car have? ");
+            Car.eNumberOfDoors carNumberOfDoors = (Car.eNumberOfDoors)receiveEnumInput<Car.eNumberOfDoors>();
+
+            i_NewCar.ModelName = i_ModelName;
+            i_NewCar.EnergyPercentageLeft = currentEnergyPercentage;
+            i_NewCar.InitializeWheelsList(Vehicle.eNumberOfWheels.Car, i_WheelManufacturer, i_CurrentAirPressure, Wheel.eMaxAirPressure.Car);
+            i_NewCar.InitializeEngine(engineType, currentEnergyAmount);
+            i_NewCar.CarColor = carColor;
+            i_NewCar.NumberOfDoors = carNumberOfDoors;
+        }
+
+        private void receiveEngineInformation(
+            out Engine.eEngineType o_EngineType,
+            out float o_CurrentEnergyAmount,
+            out float o_CurrentEnergyPercentage,
+            VehicleCreator.eSupportedVehicles i_VehicleType)
+        {
+            Console.WriteLine("Please enter engine information");
+
+            Console.Write(
+                @"Engine Type
+1   Gas Engine
+2   Electric Engine
+Please enter the type of your engine: ");
+            o_EngineType = (Engine.eEngineType)receiveEnumInput<Engine.eEngineType>();
+
+            receiveVehicleEnergyInformation(
+                i_VehicleType,
+                o_EngineType,
+                out o_CurrentEnergyAmount,
+                out o_CurrentEnergyPercentage);
+        }
+
+        private void receiveVehicleEnergyInformation(
+            VehicleCreator.eSupportedVehicles i_VehicleType,
+            Engine.eEngineType i_EngineType,
+            out float o_CurrentEnergyAmount,
+            out float o_CurrentEnergyPercentage)
+        {
             
-            return isValidPhoneNumber;
-        }
+            string maxEnergyCapacityString = Enum.GetName(typeof(VehicleCreator.eSupportedVehicles), i_VehicleType);
+            float maxEnergyCapacity;
 
-        private bool checkLicenseNumberInput(string i_LicenseNumber)
-        {
-            bool isValidLicenseNumber = true;
-
-            if(i_LicenseNumber.Length < 7 || i_LicenseNumber.Length > 8)
+            if (i_EngineType == Engine.eEngineType.Gas)
             {
-                Console.Write("License number must be 7-8 digits, please try again: ");
-                isValidLicenseNumber = false;
+                maxEnergyCapacity = (float)Enum.Parse(typeof(GasEngine.eGasCapacity), maxEnergyCapacityString);
             }
             else
             {
-                foreach(char c in i_LicenseNumber)
-                {
-                    if(!char.IsDigit(c))
-                    {
-                        Console.Write("License number must contain digits only, please try again: ");
-                        isValidLicenseNumber = false;
-                        break;
-                    }
-                }
+                maxEnergyCapacity = (float)Enum.Parse(
+                                        typeof(ElectricEngine.eElectricEngineCapacityInMinutes),
+                                        maxEnergyCapacityString) / 60;
             }
 
-            return isValidLicenseNumber;
+            string typeOfEnergy = i_EngineType == Engine.eEngineType.Electric ? "energy" : "gas";
+            bool isValidEnergyAmount;
+            string currentEnergyString;
+
+            Console.Write("How much {0} is in your vehicle? ", typeOfEnergy);
+            do
+            {
+                currentEnergyString = Console.ReadLine();
+                isValidEnergyAmount = InputValidation.CheckEnergyAmount(currentEnergyString, maxEnergyCapacity, typeOfEnergy);
+            }
+            while (!isValidEnergyAmount);
+
+            o_CurrentEnergyAmount = float.Parse(currentEnergyString);
+            o_CurrentEnergyPercentage = o_CurrentEnergyAmount / maxEnergyCapacity * 100;
         }
 
         private void presentUserMenu()

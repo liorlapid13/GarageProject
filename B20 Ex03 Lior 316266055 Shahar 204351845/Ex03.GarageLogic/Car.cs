@@ -6,7 +6,7 @@ namespace Ex03.GarageLogic
 {
     public class Car : Vehicle
     {
-        private readonly eNumberOfDoors m_NumberOfDoors;
+        private eNumberOfDoors m_NumberOfDoors;
         private eColor m_CarColor;
 
         public enum eColor
@@ -25,31 +25,22 @@ namespace Ex03.GarageLogic
             Five
         }
 
-        public Car(
-            string i_LicenseNumber,
-            string i_ModelName,
-            float i_EnergyPercentageLeft,
-            eColor i_CarColor,
-            eNumberOfDoors i_NumberOfDoors,
-            float i_CurrentAirPressure,
-            string i_WheelManufacturer,
-            Engine.eEngineType i_EngineType,
-            float i_MaxEnergyCapacity,
-            float i_CurrentEnergyAmount)
-            : base(i_LicenseNumber, i_ModelName, i_EnergyPercentageLeft)
+        public Car(string i_LicenseNumber)
+            : base(i_LicenseNumber)
         {
-            m_CarColor = i_CarColor;
-            m_NumberOfDoors = i_NumberOfDoors;
-            InitializeWheelsList(eNumberOfWheels.Car, i_WheelManufacturer, i_CurrentAirPressure, Wheel.eMaxAirPressure.Car);
-            InitializeEngine(i_EngineType, i_MaxEnergyCapacity, i_CurrentEnergyAmount, GasEngine.eGasType.Octan96);
-        }
 
+        }
 
         public eNumberOfDoors NumberOfDoors
         {
             get
             {
                 return m_NumberOfDoors;
+            }
+
+            set
+            {
+                m_NumberOfDoors = value;
             }
         }
         public eColor CarColor
@@ -64,5 +55,16 @@ namespace Ex03.GarageLogic
             }
         }
 
+        public override void InitializeEngine(Engine.eEngineType i_EngineType, float i_CurrentEnergyAmount)
+        {
+            if(i_EngineType == Engine.eEngineType.Gas)
+            {
+                m_Engine = new GasEngine(GasEngine.eGasType.Octan96, i_CurrentEnergyAmount, GasEngine.eGasCapacity.Car);
+            }
+            else
+            {
+                m_Engine = new ElectricEngine(i_CurrentEnergyAmount, ElectricEngine.eElectricEngineCapacityInMinutes.Car);
+            }
+        }
     }
 }

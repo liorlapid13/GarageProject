@@ -10,8 +10,7 @@ namespace Ex03.GarageLogic
 
         public enum eGasType
         {
-            None,
-            Soler,
+            Soler = 1,
             Octan95,
             Octan96,
             Octan98
@@ -32,7 +31,8 @@ namespace Ex03.GarageLogic
             }
         }
 
-        public GasEngine(eGasType i_GasType, float i_MaxGasCapacity, float i_CurrentGasAmount) :base(i_MaxGasCapacity, i_CurrentGasAmount)
+        public GasEngine(eGasType i_GasType, float i_CurrentGasAmount, eGasCapacity i_MaxGasCapacity)
+            : base(((float)i_MaxGasCapacity) / 60, i_CurrentGasAmount)
         {
             r_GasType = i_GasType;
         }

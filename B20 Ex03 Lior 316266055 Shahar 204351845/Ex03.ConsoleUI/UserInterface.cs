@@ -356,7 +356,6 @@ What would you like to do? ");
 
         private void addNewVehicleToGarage()
         {
-
             string licenseNumber;
             bool isValidLicenseNumber;
 
@@ -410,6 +409,7 @@ What would you like to do? ");
         private void insertNewVehicleToGarage(string i_LicenseNumber, Vehicle i_NewVehicle)
         {
             string ownerName, ownerPhoneNumber;
+            bool isValidInput = false;
 
             receiveVehicleOwnerInformation(out ownerName, out ownerPhoneNumber);
 
@@ -417,24 +417,36 @@ What would you like to do? ");
 
             List<string> userDialogueInputsList = new List<string>();
 
-            foreach(string question in userDialogueStringsList)
+            for(int i=0;i<userDialogueStringsList.Count;++i)
             {
-                Console.Write(question);
-
-                try
+                isValidInput = false;
+                Console.Write(userDialogueStringsList[i]);
+                do
                 {
-                    string userInput = Console.ReadLine();
-                    //receiveUserInput();
-                    userDialogueInputsList.Add(userInput);
-                    //i_NewVehicle.CheckLatestInput(userDialogueInputsList);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    throw;
-                }
+                    try
+                    {
+                        string userInput = Console.ReadLine();
+                        if(i_NewVehicle.CheckLatestUserInput(userInput,i))
+                        {
+                            isValidInput = true;
+                            userDialogueInputsList.Add(userInput);
+                        }
 
-                
+                    }
+                    catch(ArgumentException)
+                    {
+                        Console.WriteLine("Invalid input,please try again");
+                    }
+                    catch (FormatException)
+                    {
+                        Console.WriteLine("Invalid input,please try again");
+                    }
+                    catch (ValueOutOfRangeException valueOutOfRangeException)
+                    {
+                        Console.WriteLine(valueOutOfRangeException.Message);
+                    }
+                }
+                while(!isValidInput);
             }
         }
     }

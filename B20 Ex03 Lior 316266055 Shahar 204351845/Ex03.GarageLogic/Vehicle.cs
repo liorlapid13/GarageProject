@@ -78,16 +78,43 @@ namespace Ex03.GarageLogic
             return userDialogueStringList;
         }
 
-        public virtual void CheckLatestUserInput(List<string> userDialogueInputList)
+        public bool CheckModelName(string i_ModelName)
         {
-            int indexOfLatestUserInput = userDialogueInputList.Count;
-
-            switch(indexOfLatestUserInput)
+            if(string.IsNullOrEmpty(i_ModelName))
             {
-                case 1:
-                    //checkVehicleModelNameInput(userDialogueInputList[indexOfLatestUserInput])
-                    break;
+                throw new ArgumentException("You entered a empty string,please try again");
             }
+
+            return true;
         }
+
+        public bool CheckWheelManufacturer(string i_WheelManufacture)
+        {
+            if (string.IsNullOrEmpty(i_WheelManufacture))
+            {
+                throw new ArgumentException("You entered a empty string,please try again");
+            }
+
+            return true;
+        }
+
+        public bool CheckEnumSelect<T>(string i_EngineSelect)
+        {
+            int selection = int.Parse(i_EngineSelect);
+
+            if (!Enum.IsDefined(typeof(T), selection))
+            {
+                throw new ValueOutOfRangeException(Enum.GetValues(typeof(T)).Length, 1);
+            }
+
+            return true;
+        }
+
+        public abstract void UpdateProperties(List<string> userDialogueInputsList);
+        public abstract bool CheckCurrentEnergyAmount(string i_EnergyAmount);
+        public abstract bool CheckCurrentWheelAirPressure(string i_WheelAirPressure);
+        
+        public abstract bool CheckLatestUserInput(string i_StringToCheck, int i_IndexInList);
+
     }
 }

@@ -7,3 +7,12 @@ C:\Users\Lior\Projects\GitHub GarageProject\GarageProject\B20 Ex03 Lior 31626605
 C:\Users\Lior\Projects\GitHub GarageProject\GarageProject\B20 Ex03 Lior 316266055 Shahar 204351845\Ex03.ConsoleUI\obj\Debug\Ex03.ConsoleUI.csproj.CopyComplete
 C:\Users\Lior\Projects\GitHub GarageProject\GarageProject\B20 Ex03 Lior 316266055 Shahar 204351845\Ex03.ConsoleUI\obj\Debug\Ex03.ConsoleUI.exe
 C:\Users\Lior\Projects\GitHub GarageProject\GarageProject\B20 Ex03 Lior 316266055 Shahar 204351845\Ex03.ConsoleUI\obj\Debug\Ex03.ConsoleUI.pdb
+D:\Second year\C#\GarageProject\B20 Ex03 Lior 316266055 Shahar 204351845\Ex03.ConsoleUI\obj\Debug\Ex03.ConsoleUI.csprojAssemblyReference.cache
+D:\Second year\C#\GarageProject\B20 Ex03 Lior 316266055 Shahar 204351845\Ex03.ConsoleUI\obj\Debug\Ex03.ConsoleUI.csproj.CoreCompileInputs.cache
+D:\Second year\C#\GarageProject\B20 Ex03 Lior 316266055 Shahar 204351845\Ex03.ConsoleUI\obj\Debug\Ex03.ConsoleUI.exe
+D:\Second year\C#\GarageProject\B20 Ex03 Lior 316266055 Shahar 204351845\Ex03.ConsoleUI\obj\Debug\Ex03.ConsoleUI.pdb
+D:\Second year\C#\GarageProject\B20 Ex03 Lior 316266055 Shahar 204351845\Ex03.ConsoleUI\bin\Debug\Ex03.ConsoleUI.exe
+D:\Second year\C#\GarageProject\B20 Ex03 Lior 316266055 Shahar 204351845\Ex03.ConsoleUI\bin\Debug\Ex03.ConsoleUI.pdb
+D:\Second year\C#\GarageProject\B20 Ex03 Lior 316266055 Shahar 204351845\Ex03.ConsoleUI\bin\Debug\Ex03.GarageLogic.dll
+D:\Second year\C#\GarageProject\B20 Ex03 Lior 316266055 Shahar 204351845\Ex03.ConsoleUI\bin\Debug\Ex03.GarageLogic.pdb
+D:\Second year\C#\GarageProject\B20 Ex03 Lior 316266055 Shahar 204351845\Ex03.ConsoleUI\obj\Debug\Ex03.ConsoleUI.csproj.CopyComplete

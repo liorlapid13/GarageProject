@@ -66,5 +66,33 @@ namespace Ex03.GarageLogic
                 m_Engine = new ElectricEngine(i_CurrentEnergyAmount, ElectricEngine.eElectricEngineCapacityInMinutes.Car);
             }
         }
+
+        public override List<string> GetUserDialogueStrings()
+        {
+            List<string> userDialogueStringList = base.GetUserDialogueStrings();
+
+            userDialogueStringList.Add(
+@"Engine Type
+1   Gas Engine
+2   Electric Engine
+Please enter the type of your engine: ");
+            userDialogueStringList.Add("How much gas/energy is in your car? ");
+            userDialogueStringList.Add(
+@"Vehicle Color
+1   Red
+2   White
+3   Black
+4   Silver
+What color is your car? ");
+            userDialogueStringList.Add(
+@"Vehicle Doors
+2   Two
+3   Three
+4   Four
+5   Five
+How many doors does your car have? ");
+
+            return userDialogueStringList;
+        }
     }
 }

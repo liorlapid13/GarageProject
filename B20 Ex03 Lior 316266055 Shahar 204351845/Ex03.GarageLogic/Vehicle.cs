@@ -66,5 +66,28 @@ namespace Ex03.GarageLogic
         }
 
         public abstract void InitializeEngine(Engine.eEngineType i_EngineType, float i_CurrentEnergyAmount);
+
+        public virtual List<string> GetUserDialogueStrings()
+        {
+            List<string> userDialogueStringList = new List<string>();
+            
+            userDialogueStringList.Add("Please enter your model name: ");
+            userDialogueStringList.Add("What is your wheels' manufacturer? ");
+            userDialogueStringList.Add("What is your wheels' air pressure? ");
+
+            return userDialogueStringList;
+        }
+
+        public virtual void CheckLatestUserInput(List<string> userDialogueInputList)
+        {
+            int indexOfLatestUserInput = userDialogueInputList.Count;
+
+            switch(indexOfLatestUserInput)
+            {
+                case 1:
+                    //checkVehicleModelNameInput(userDialogueInputList[indexOfLatestUserInput])
+                    break;
+            }
+        }
     }
 }

@@ -44,7 +44,8 @@ namespace Ex03.ConsoleUI
                     //User selection failed
                     break;
                 case eGarageActions.InsertNewVehicle:
-                    getNewVehicleInformationAndInsertToGarage();
+                    //getNewVehicleInformationAndInsertToGarage();
+                    addNewVehicleToGarage();
                     break;
 
             }
@@ -111,7 +112,7 @@ Is your truck carrying hazardous materials? ");
 
         private void receiveVehicleOwnerInformation(out string o_OwnerName, out string o_PhoneNumber)
         {
-            Console.WriteLine("Hello, please enter your personal information");
+            Console.WriteLine("Please enter vehicle owner's information");
             bool isValidName, isValidPhoneNumber;
             string ownerName, ownerPhoneNumber;
 
@@ -349,6 +350,92 @@ What would you like to do? ");
             }
 
             return true;
+        }
+
+        //============================================================================================//
+
+        private void addNewVehicleToGarage()
+        {
+
+            string licenseNumber;
+            bool isValidLicenseNumber;
+
+            Console.Write("Please enter your license number: ");
+            do
+            {
+                licenseNumber = Console.ReadLine();
+                isValidLicenseNumber = InputValidation.CheckLicenseNumberInput(licenseNumber);
+            }
+            while (!isValidLicenseNumber);
+
+            if(r_Garage.CheckIfVehicleExistsInGarage(licenseNumber))
+            {
+                Console.WriteLine("The Vehicle you entered already exists in the garage");
+                r_Garage.ChangeVehicleStatus(licenseNumber, Garage.VehicleInformation.eVehicleStatus.InService);
+            }
+            else
+            {
+                Vehicle newVehicle = createNewVehicle(licenseNumber);
+                insertNewVehicleToGarage(licenseNumber, newVehicle);
+                //  1. import questions (from GarageLogic) and receive information from user (TRY CATCH)
+                //  2. send received information to GarageLogic (THROWS) (NOT IN UI) -> Vehicle.UpdateVehicleInforation(,,,)
+                //  3. insert to garage (?)
+            }
+        }
+
+        private Vehicle createNewVehicle(string i_LicenseNumber)
+        {
+            string[] vehicleTypes = Enum.GetNames(typeof(VehicleCreator.eSupportedVehicles));
+            StringBuilder vehicleTypesOutputMessage = new StringBuilder();
+
+            for(int i = 0; i < vehicleTypes.Length; i++)
+            {
+                vehicleTypesOutputMessage.AppendLine(string.Format("{0}\t{1}", i + 1, vehicleTypes[i]));
+            }
+
+            Console.Write(
+@"Vehicle Types
+{0}Please select vehicle type: ",
+                vehicleTypesOutputMessage);
+
+            int selectedVehicleType = receiveEnumInput<VehicleCreator.eSupportedVehicles>();
+
+            Vehicle newVehicle = VehicleCreator.CreateNewVehicle(
+                i_LicenseNumber,
+                (VehicleCreator.eSupportedVehicles)selectedVehicleType);
+
+            return newVehicle;
+        }
+
+        private void insertNewVehicleToGarage(string i_LicenseNumber, Vehicle i_NewVehicle)
+        {
+            string ownerName, ownerPhoneNumber;
+
+            receiveVehicleOwnerInformation(out ownerName, out ownerPhoneNumber);
+
+            List<string> userDialogueStringsList = i_NewVehicle.GetUserDialogueStrings();
+
+            List<string> userDialogueInputsList = new List<string>();
+
+            foreach(string question in userDialogueStringsList)
+            {
+                Console.Write(question);
+
+                try
+                {
+                    string userInput = Console.ReadLine();
+                    //receiveUserInput();
+                    userDialogueInputsList.Add(userInput);
+                    //i_NewVehicle.CheckLatestInput(userDialogueInputsList);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
+
+                
+            }
         }
     }
 }

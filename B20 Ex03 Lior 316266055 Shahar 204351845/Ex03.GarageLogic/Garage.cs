@@ -6,18 +6,18 @@ namespace Ex03.GarageLogic
 {
     public class Garage
     {
-        private Dictionary<string, VehicleInformation> m_VehicleDictionary;
+        private Dictionary<string, VehicleInformation> m_VehiclesInGarage;
         
         public Garage()
         {
-            m_VehicleDictionary = new Dictionary<string, VehicleInformation>();
+            m_VehiclesInGarage = new Dictionary<string, VehicleInformation>();
         }
 
         public Dictionary<string, VehicleInformation> VehicleDictionary
         {
             get
             {
-                return m_VehicleDictionary;
+                return m_VehiclesInGarage;
             }
         }
 
@@ -25,7 +25,7 @@ namespace Ex03.GarageLogic
         {
             bool isVehicleInGarage = false;
 
-            foreach(KeyValuePair<string,VehicleInformation> item in m_VehicleDictionary)
+            foreach(KeyValuePair<string,VehicleInformation> item in m_VehiclesInGarage)
             {
                 if(i_LicenseNumber == item.Key)
                 {
@@ -38,12 +38,22 @@ namespace Ex03.GarageLogic
             if(!isVehicleInGarage)
             {
                 VehicleInformation newVehicleInformation = new VehicleInformation(i_OwnerName, i_OwnerPhoneNumber, i_Vehicle);
-                m_VehicleDictionary.Add(i_LicenseNumber, newVehicleInformation);
+                m_VehiclesInGarage.Add(i_LicenseNumber, newVehicleInformation);
             }
             else
             {
                 throw new ArgumentException("Vehicle already in garage, status changed to 'InService'");
             }
+        }
+
+        public bool CheckIfVehicleExistsInGarage(string i_LicenseNumber)
+        {
+            return m_VehiclesInGarage.ContainsKey(i_LicenseNumber);
+        }
+
+        public void ChangeVehicleStatus(string i_LicenseNumber, VehicleInformation.eVehicleStatus i_NewVehicleStatus)
+        {
+            m_VehiclesInGarage[i_LicenseNumber].VehicleStatus = i_NewVehicleStatus;
         }
 
         public class VehicleInformation

@@ -113,13 +113,13 @@ namespace Ex03.ConsoleUI
             float energyAmount;
             bool isValidEnergyAmount = float.TryParse(i_EnergyAmount, out energyAmount);
 
-            if (!isValidEnergyAmount)
+            if(!isValidEnergyAmount)
             {
                 Console.Write("You must enter a number, please try again: ");
             }
             else
             {
-                if (energyAmount > i_MaxEnergyCapacity)
+                if(energyAmount > i_MaxEnergyCapacity)
                 {
                     Console.Write(
                         "The maximum amount of {0} for your vehicle is {1}, please try again: ",
@@ -131,6 +131,5 @@ namespace Ex03.ConsoleUI
 
             return isValidEnergyAmount;
         }
-    }
     }
 }

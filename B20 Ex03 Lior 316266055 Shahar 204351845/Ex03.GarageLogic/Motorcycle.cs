@@ -6,9 +6,9 @@ namespace Ex03.GarageLogic
 {
     public class Motorcycle : Vehicle
     {
+        private const float k_MaxEngineCapacity = 9999F;
         private eLicenseType m_LicenseType;
         private int m_EngineCapacity;
-
 
         public enum eLicenseType
         {
@@ -18,8 +18,14 @@ namespace Ex03.GarageLogic
             B
         }
 
-        public Motorcycle(string i_LicenseNumber)
-            : base(i_LicenseNumber)
+        public enum eMotorcycleUserDialogueListIndex
+        {
+            EngineCapacity = 4,
+            LicenseType
+        }
+
+        public Motorcycle(string i_LicenseNumber, Engine.eEngineType i_EngineType, float i_MaxEngineEnergyCapacity)
+            : base(i_LicenseNumber, i_EngineType, i_MaxEngineEnergyCapacity)
         {
             
         }
@@ -43,100 +49,98 @@ namespace Ex03.GarageLogic
             }
         }
 
-        public override void InitializeEngine(Engine.eEngineType i_EngineType, float i_CurrentEnergyAmount)
+        public override List<string> GetUserDialogueStrings()
         {
-            if (i_EngineType == Engine.eEngineType.Gas)
-            {
-                m_Engine = new GasEngine(GasEngine.eGasType.Octan95, i_CurrentEnergyAmount, GasEngine.eGasCapacity.Motorcycle);
-            }
-            else
-            {
-                m_Engine = new ElectricEngine(i_CurrentEnergyAmount, ElectricEngine.eElectricEngineCapacityInMinutes.Motorcycle);
-            }
-        }
-        public override bool CheckCurrentWheelAirPressure(string i_CurrentWheelAirPressure)
-        {
-            float airPressure;
-            bool isValidAirPressure = float.TryParse(i_CurrentWheelAirPressure, out airPressure);
+            List<string> userDialogueStringList = base.GetUserDialogueStrings();
 
-            if (!isValidAirPressure)
-            {
-                throw new FormatException("Parse is failed");
-            }
-            else
-            {
-                string maxAirPressureString = Enum.GetName(typeof(VehicleCreator.eSupportedVehicles), VehicleCreator.eSupportedVehicles.Motorcycle);
-                Wheel.eMaxAirPressure maxAirPressure = (Wheel.eMaxAirPressure)Enum.Parse(typeof(Wheel.eMaxAirPressure), maxAirPressureString);
+            userDialogueStringList.Add("Engine Capacity: ");
+            userDialogueStringList.Add(
+                @"License Type
+1   A
+2   A1
+3   AA
+4   B
+What is your license type? ");
 
-                if (airPressure > (float)maxAirPressure)
-                {
-                    throw new ValueOutOfRangeException((float)Wheel.eMaxAirPressure.Motorcycle, 0);
-                    isValidAirPressure = false;
-                }
-            }
-
-            return true;
-        }
-        public override bool CheckCurrentEnergyAmount(string i_EnergyAmount)
-        {
-            float energyAmount;
-            float maxEnergyCapacity;
-            int engineType = 1;
-
-            if (engineType == 1)
-            {
-                maxEnergyCapacity = (float)GasEngine.eGasCapacity.Car;
-            }
-            else
-            {
-                maxEnergyCapacity = (float)ElectricEngine.eElectricEngineCapacityInMinutes.Car;
-            }
-            bool isValidEnergyAmount = float.TryParse(i_EnergyAmount, out energyAmount);
-
-            if (!isValidEnergyAmount)
-            {
-                throw new FormatException("Parse is failed");
-            }
-            else
-            {
-                if (energyAmount > maxEnergyCapacity)
-                {
-                    throw new ValueOutOfRangeException(maxEnergyCapacity, 0);
-
-                }
-            }
-
-            return true;
+            return userDialogueStringList;
         }
 
         public override bool CheckLatestUserInput(string i_StringToCheck, int i_IndexInList)
         {
             bool isValidInput = false;
 
-            switch (i_IndexInList)
+            if(i_IndexInList < 4)
             {
-                case 0:
-                    isValidInput = CheckModelName(i_StringToCheck);
-                    break;
-                case 1:
-                    isValidInput = CheckWheelManufacturer(i_StringToCheck);
-                    break;
-                case 2:
-                    isValidInput = CheckCurrentWheelAirPressure(i_StringToCheck);
-                    break;
-                case 3:
-                    isValidInput = CheckEnumSelect<Engine.eEngineType>(i_StringToCheck);
-                    break;
-                case 4:
-                    isValidInput = CheckCurrentEnergyAmount(i_StringToCheck);
-                    break;
+                isValidInput = base.CheckLatestUserInput(i_StringToCheck, i_IndexInList);
             }
+            else
+            {
+                eMotorcycleUserDialogueListIndex dialogueListIndex = (eMotorcycleUserDialogueListIndex)i_IndexInList;
+
+                switch (dialogueListIndex)
+                {
+                    case eMotorcycleUserDialogueListIndex.EngineCapacity:
+                        isValidInput = checkEngineCapacityInput(i_StringToCheck);
+                        break;
+                    case eMotorcycleUserDialogueListIndex.LicenseType:
+                        isValidInput = CheckEnumSelect<eLicenseType>(i_StringToCheck);
+                        break;
+                }
+            }
+            
 
             return isValidInput;
         }
-        public override void UpdateProperties(List<string> userDialogueInputsList)
-        {
 
+        public override void UpdateProperties(List<string> i_UserDialogueInputsList)
+        {
+            base.UpdateProperties(i_UserDialogueInputsList);
+            float currentWheelAirPressure = float.Parse(
+                i_UserDialogueInputsList[(int)eVehicleUserDialogueListIndex.CurrentWheelAirPressure]);
+            int licenseType = int.Parse(i_UserDialogueInputsList[(int)eMotorcycleUserDialogueListIndex.LicenseType]);
+
+            InitializeWheelsList(
+                eNumberOfWheels.Truck,
+                i_UserDialogueInputsList[(int)eVehicleUserDialogueListIndex.WheelManufacturer],
+                currentWheelAirPressure,
+                Wheel.eMaxAirPressure.Truck);
+            m_EngineCapacity =
+                int.Parse(i_UserDialogueInputsList[(int)eMotorcycleUserDialogueListIndex.EngineCapacity]);
+            m_LicenseType = (eLicenseType)licenseType;
+        }
+
+        private bool checkEngineCapacityInput(string i_EngineCapacity)
+        {
+            float engineCapacity;
+            bool isValidEngineCapacity = float.TryParse(i_EngineCapacity, out engineCapacity);
+
+            if(!isValidEngineCapacity)
+            {
+                throw new FormatException("Failed parse: string->float");
+            }
+
+            if(engineCapacity <= 0)
+            {
+                throw new ValueOutOfRangeException(k_MaxEngineCapacity, 1);
+            }
+
+            return true;
+        }
+
+        public override string ToString()
+        {
+            string motorcycleInformationOutput = string.Format(
+                @"{0}
+Number of Wheels: {1}
+Truck Information
+License Type: {2}
+Engine Capacity: {3}cc",
+                VehicleToString(),
+                eNumberOfWheels.Motorcycle,
+                m_LicenseType.ToString(),
+                m_EngineCapacity);
+
+            return motorcycleInformationOutput;
         }
     }
 }

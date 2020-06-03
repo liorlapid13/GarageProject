@@ -46,6 +46,7 @@ namespace Ex03.ConsoleUI
                 case eGarageActions.InsertNewVehicle:
                     //getNewVehicleInformationAndInsertToGarage();
                     addNewVehicleToGarage();
+                    r_Garage.VehicleDictionary["1234567"].Vehicle.ToString();
                     break;
 
             }
@@ -68,9 +69,9 @@ namespace Ex03.ConsoleUI
 
             switch (vehicleType)
             {
-                case VehicleCreator.eSupportedVehicles.Car:
-                    receiveAndInsertCarInformation((Car)newVehicle, modelName, wheelManufacturer, currentAirPressure);
-                    break;
+                //case VehicleCreator.eSupportedVehicles.Car:
+                    //receiveAndInsertCarInformation((Car)newVehicle, modelName, wheelManufacturer, currentAirPressure);
+                   // break;
                 
 
 
@@ -214,7 +215,7 @@ Please enter your vehicle type: ");
             Engine.eEngineType engineType;
             float currentEnergyAmount, currentEnergyPercentage;
 
-            receiveEngineInformation(out engineType, out currentEnergyAmount, out currentEnergyPercentage, VehicleCreator.eSupportedVehicles.Car);
+            //receiveEngineInformation(out engineType, out currentEnergyAmount, out currentEnergyPercentage, VehicleCreator.eSupportedVehicles.Car);
 
             Console.Write(
 @"Vehicle Color
@@ -235,9 +236,9 @@ How many doors does your car have? ");
             Car.eNumberOfDoors carNumberOfDoors = (Car.eNumberOfDoors)receiveEnumInput<Car.eNumberOfDoors>();
 
             i_NewCar.ModelName = i_ModelName;
-            i_NewCar.EnergyPercentageLeft = currentEnergyPercentage;
+            //i_NewCar.EnergyPercentageLeft = currentEnergyPercentage;
             i_NewCar.InitializeWheelsList(Vehicle.eNumberOfWheels.Car, i_WheelManufacturer, i_CurrentAirPressure, Wheel.eMaxAirPressure.Car);
-            i_NewCar.InitializeEngine(engineType, currentEnergyAmount);
+            //i_NewCar.InitializeEngine(engineType, currentEnergyAmount);
             i_NewCar.CarColor = carColor;
             i_NewCar.NumberOfDoors = carNumberOfDoors;
         }
@@ -376,9 +377,6 @@ What would you like to do? ");
             {
                 Vehicle newVehicle = createNewVehicle(licenseNumber);
                 insertNewVehicleToGarage(licenseNumber, newVehicle);
-                //  1. import questions (from GarageLogic) and receive information from user (TRY CATCH)
-                //  2. send received information to GarageLogic (THROWS) (NOT IN UI) -> Vehicle.UpdateVehicleInforation(,,,)
-                //  3. insert to garage (?)
             }
         }
 
@@ -409,15 +407,13 @@ What would you like to do? ");
         private void insertNewVehicleToGarage(string i_LicenseNumber, Vehicle i_NewVehicle)
         {
             string ownerName, ownerPhoneNumber;
-            bool isValidInput = false;
+            bool isValidInput;
 
             receiveVehicleOwnerInformation(out ownerName, out ownerPhoneNumber);
-
             List<string> userDialogueStringsList = i_NewVehicle.GetUserDialogueStrings();
-
             List<string> userDialogueInputsList = new List<string>();
 
-            for(int i=0;i<userDialogueStringsList.Count;++i)
+            for(int i = 0; i < userDialogueStringsList.Count; ++i) 
             {
                 isValidInput = false;
                 Console.Write(userDialogueStringsList[i]);
@@ -426,28 +422,27 @@ What would you like to do? ");
                     try
                     {
                         string userInput = Console.ReadLine();
-                        if(i_NewVehicle.CheckLatestUserInput(userInput,i))
+
+                        if(i_NewVehicle.CheckLatestUserInput(userInput, i))
                         {
                             isValidInput = true;
                             userDialogueInputsList.Add(userInput);
                         }
-
-                    }
-                    catch(ArgumentException)
-                    {
-                        Console.WriteLine("Invalid input,please try again");
                     }
                     catch (FormatException)
                     {
-                        Console.WriteLine("Invalid input,please try again");
+                        Console.Write("Invalid input, please try again: ");
                     }
                     catch (ValueOutOfRangeException valueOutOfRangeException)
                     {
-                        Console.WriteLine(valueOutOfRangeException.Message);
+                        Console.Write("You must enter a number between {0} and {1}: ", valueOutOfRangeException.MinValue, valueOutOfRangeException.MaxValue);
                     }
                 }
                 while(!isValidInput);
             }
+
+            i_NewVehicle.UpdateProperties(userDialogueInputsList);
+            r_Garage.AddVehicleToGarage(i_LicenseNumber, ownerName, ownerPhoneNumber, i_NewVehicle);
         }
     }
 }

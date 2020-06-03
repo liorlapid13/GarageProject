@@ -36,16 +36,16 @@ namespace Ex03.ConsoleUI
         {
             bool isValidPhoneNumber = true;
 
-            if (i_PhoneNumber.Length != 10)
+            if(i_PhoneNumber.Length != 10) 
             {
                 Console.Write("Phone number must be 10-digits long, please try again: ");
                 isValidPhoneNumber = false;
             }
             else
             {
-                foreach (char c in i_PhoneNumber)
+                foreach(char c in i_PhoneNumber)
                 {
-                    if (!Char.IsDigit(c))
+                    if(!Char.IsDigit(c)) 
                     {
                         Console.Write("Phone number must include only digits, please try again: ");
                         isValidPhoneNumber = false;

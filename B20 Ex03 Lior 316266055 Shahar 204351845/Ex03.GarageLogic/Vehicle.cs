@@ -20,9 +20,28 @@ namespace Ex03.GarageLogic
             Truck = 16
         }
 
-        protected Vehicle(string i_LicenseNumber)
+        public enum eVehicleUserDialogueListIndex
+        {
+            ModelName,
+            WheelManufacturer,
+            CurrentWheelAirPressure,
+            CurrentEnergyAmount,
+        }
+
+        protected Vehicle(string i_LicenseNumber, Engine.eEngineType i_EngineType, float i_MaxEngineEnergyCapacity)
         {
             r_LicenseNumber = i_LicenseNumber;
+
+            switch (i_EngineType)
+            {
+                case Engine.eEngineType.Electric:
+                    m_Engine = new ElectricEngine(i_MaxEngineEnergyCapacity);
+                    break;
+                case Engine.eEngineType.Gas:
+                    //GasEngine.eGasType gasType = (GasEngine.eGasType)Enum.Parse(typeof(GasEngine.eGasType), GetType().Name);
+                    m_Engine = new GasEngine(i_MaxEngineEnergyCapacity);
+                    break;
+            }
         }
 
         public string ModelName
@@ -65,20 +84,20 @@ namespace Ex03.GarageLogic
             }
         }
 
-        public abstract void InitializeEngine(Engine.eEngineType i_EngineType, float i_CurrentEnergyAmount);
-
         public virtual List<string> GetUserDialogueStrings()
         {
-            List<string> userDialogueStringList = new List<string>();
-            
-            userDialogueStringList.Add("Please enter your model name: ");
-            userDialogueStringList.Add("What is your wheels' manufacturer? ");
-            userDialogueStringList.Add("What is your wheels' air pressure? ");
+            List<string> userDialogueStringList = new List<string>
+            {
+                "Model Name: ",
+                "Wheel Manufacturer: ",
+                "Current Wheel Air Pressure: ",
+                "Current Gas/Energy Amount (Liters/Hours): "
+            };
 
             return userDialogueStringList;
         }
 
-        public bool CheckModelName(string i_ModelName)
+        private bool checkModelName(string i_ModelName)
         {
             if(string.IsNullOrEmpty(i_ModelName))
             {
@@ -88,7 +107,7 @@ namespace Ex03.GarageLogic
             return true;
         }
 
-        public bool CheckWheelManufacturer(string i_WheelManufacture)
+        private bool checkWheelManufacturer(string i_WheelManufacture)
         {
             if (string.IsNullOrEmpty(i_WheelManufacture))
             {
@@ -102,7 +121,7 @@ namespace Ex03.GarageLogic
         {
             int selection = int.Parse(i_EngineSelect);
 
-            if (!Enum.IsDefined(typeof(T), selection))
+            if(!Enum.IsDefined(typeof(T), selection))
             {
                 throw new ValueOutOfRangeException(Enum.GetValues(typeof(T)).Length, 1);
             }
@@ -110,11 +129,100 @@ namespace Ex03.GarageLogic
             return true;
         }
 
-        public abstract void UpdateProperties(List<string> userDialogueInputsList);
-        public abstract bool CheckCurrentEnergyAmount(string i_EnergyAmount);
-        public abstract bool CheckCurrentWheelAirPressure(string i_WheelAirPressure);
-        
-        public abstract bool CheckLatestUserInput(string i_StringToCheck, int i_IndexInList);
+        public virtual void UpdateProperties(List<string> i_UserDialogueInputsList)
+        {
+            m_ModelName = i_UserDialogueInputsList[(int)eVehicleUserDialogueListIndex.ModelName];
+            m_Engine.CurrentEnergy = float.Parse(i_UserDialogueInputsList[(int)eVehicleUserDialogueListIndex.CurrentEnergyAmount]);
 
+            m_EnergyPercentageLeft = m_Engine.CurrentEnergy / m_Engine.MaxEnergyCapacity * 100;
+
+            GasEngine gasEngine = m_Engine as GasEngine;
+
+            if(gasEngine != null)
+            {
+               gasEngine.GasType = (GasEngine.eGasType)Enum.Parse(typeof(GasEngine.eGasType), GetType().Name);
+            }
+        }
+
+        private bool checkCurrentEnergyAmountInput(string i_CurrentEnergyAmountInput)
+        {
+            float currentEnergyAmount;
+            bool isValidEnergyAmount = float.TryParse(i_CurrentEnergyAmountInput, out currentEnergyAmount);
+
+            if(!isValidEnergyAmount)
+            {
+                throw new FormatException("Failed parse: string->float");
+            }
+
+            if(currentEnergyAmount > m_Engine.MaxEnergyCapacity)
+            {
+                throw new ValueOutOfRangeException(m_Engine.MaxEnergyCapacity, 0);
+            }
+
+            return true;
+        }
+
+        private bool checkCurrentWheelAirPressure(string i_CurrentWheelAirPressure)
+        {
+            float currentAirPressure;
+            bool isValidAirPressure = float.TryParse(i_CurrentWheelAirPressure, out currentAirPressure);
+
+            if(!isValidAirPressure)
+            {
+                throw new FormatException("Failed parse: string->float");
+            }
+
+            string vehicleType = this.GetType().Name;
+            Wheel.eMaxAirPressure maxAirPressure = (Wheel.eMaxAirPressure)Enum.Parse(typeof(Wheel.eMaxAirPressure), vehicleType);
+
+            if(currentAirPressure > (float)maxAirPressure) 
+            {
+                throw new ValueOutOfRangeException((float)maxAirPressure, 0);
+            }
+
+            return true;
+        }
+
+        public virtual bool CheckLatestUserInput(string i_StringToCheck, int i_IndexInList)
+        {
+            bool isValidInput = false;
+            eVehicleUserDialogueListIndex dialogueListIndex = (eVehicleUserDialogueListIndex)i_IndexInList;
+
+            switch(dialogueListIndex)
+            {
+                case eVehicleUserDialogueListIndex.ModelName:
+                    isValidInput = checkModelName(i_StringToCheck);
+                    break;
+                case eVehicleUserDialogueListIndex.WheelManufacturer:
+                    isValidInput = checkWheelManufacturer(i_StringToCheck);
+                    break;
+                case eVehicleUserDialogueListIndex.CurrentWheelAirPressure:
+                    isValidInput = checkCurrentWheelAirPressure(i_StringToCheck);
+                    break;
+                case eVehicleUserDialogueListIndex.CurrentEnergyAmount:
+                    isValidInput = checkCurrentEnergyAmountInput(i_StringToCheck);
+                    break;
+            }
+
+            return isValidInput;
+        }
+
+        protected string VehicleToString()
+        {
+            string vehicleInformationOutput = string.Format(
+                @"Vehicle Information
+License Number: {0}
+Model Name: {1}
+Engine Information
+{2}
+Wheel Information
+{3}",
+                r_LicenseNumber,
+                m_ModelName,
+                m_Engine.ToString(),
+                m_Wheels[0].ToString());
+
+            return vehicleInformationOutput;
+        }
     }
 }

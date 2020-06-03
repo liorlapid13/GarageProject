@@ -25,8 +25,14 @@ namespace Ex03.GarageLogic
             Five
         }
 
-        public Car(string i_LicenseNumber)
-            : base(i_LicenseNumber)
+        public enum eCarUserDialogueListIndex
+        {
+            Color = 4,
+            NumberOfDoors
+        }
+
+        public Car(string i_LicenseNumber, Engine.eEngineType i_EngineType, float i_MaxEngineEnergyCapacity)
+            : base(i_LicenseNumber, i_EngineType, i_MaxEngineEnergyCapacity)
         {
 
         }
@@ -55,28 +61,10 @@ namespace Ex03.GarageLogic
             }
         }
 
-        public override void InitializeEngine(Engine.eEngineType i_EngineType, float i_CurrentEnergyAmount)
-        {
-            if(i_EngineType == Engine.eEngineType.Gas)
-            {
-                m_Engine = new GasEngine(GasEngine.eGasType.Octan96, i_CurrentEnergyAmount, GasEngine.eGasCapacity.Car);
-            }
-            else
-            {
-                m_Engine = new ElectricEngine(i_CurrentEnergyAmount, ElectricEngine.eElectricEngineCapacityInMinutes.Car);
-            }
-        }
-
         public override List<string> GetUserDialogueStrings()
         {
             List<string> userDialogueStringList = base.GetUserDialogueStrings();
 
-            userDialogueStringList.Add(
-@"Engine Type
-1   Gas Engine
-2   Electric Engine
-Please enter the type of your engine: ");
-            userDialogueStringList.Add("How much gas/energy is in your car? ");
             userDialogueStringList.Add(
 @"Vehicle Color
 1   Red
@@ -95,99 +83,64 @@ How many doors does your car have? ");
             return userDialogueStringList;
         }
 
-        public override bool CheckCurrentWheelAirPressure(string i_CurrentWheelAirPressure)
-        {
-            float airPressure;
-            bool isValidAirPressure = float.TryParse(i_CurrentWheelAirPressure, out airPressure);
-
-            if (!isValidAirPressure)
-            {
-                throw new FormatException("Parse is failed");
-            }
-            else
-            {
-                string maxAirPressureString = Enum.GetName(typeof(VehicleCreator.eSupportedVehicles), VehicleCreator.eSupportedVehicles.Car);
-                Wheel.eMaxAirPressure maxAirPressure = (Wheel.eMaxAirPressure)Enum.Parse(typeof(Wheel.eMaxAirPressure),maxAirPressureString);
-
-                if (airPressure > (float)maxAirPressure)
-                {
-                    throw new ValueOutOfRangeException((float)Wheel.eMaxAirPressure.Car, 0);
-                }
-            }
-
-            return true;
-        }
-
-        public override bool CheckCurrentEnergyAmount(string i_EnergyAmount)
-        {
-            float energyAmount;
-            float maxEnergyCapacity;
-            int engineType = 1;
-
-            if (engineType == 1)
-            {
-                maxEnergyCapacity = (float)GasEngine.eGasCapacity.Car;
-            }
-            else
-            {
-                maxEnergyCapacity = (float)ElectricEngine.eElectricEngineCapacityInMinutes.Car;
-            }
-            bool isValidEnergyAmount = float.TryParse(i_EnergyAmount, out energyAmount);
-            
-            if (!isValidEnergyAmount)
-            {
-                throw new FormatException("Parse is failed");
-            }
-            else
-            {
-                if (energyAmount > maxEnergyCapacity)
-                {
-                    throw new ValueOutOfRangeException(maxEnergyCapacity, 0);
-                  
-                }
-            }
-
-            return true;
-        }
-
         public override bool CheckLatestUserInput(string i_StringToCheck, int i_IndexInList)
         {
             bool isValidInput = false;
 
-            switch(i_IndexInList)
+            if(i_IndexInList < 4)
             {
-                case 0:
-                    isValidInput = CheckModelName(i_StringToCheck);
-                    break;
-                case 1:
-                    isValidInput = CheckWheelManufacturer(i_StringToCheck);
-                    break;
-                case 2:
-                    isValidInput = CheckCurrentWheelAirPressure(i_StringToCheck);
-                    break;
-                case 3:
-                    isValidInput = CheckEnumSelect<Engine.eEngineType>(i_StringToCheck);
-                    break;
-                case 4:
-                    isValidInput = CheckCurrentEnergyAmount(i_StringToCheck);
-                    break;
-                case 5:
-                    isValidInput = CheckEnumSelect<Car.eColor>(i_StringToCheck);
-                    break;
-                case 6:
-                    isValidInput = CheckEnumSelect<Car.eNumberOfDoors>(i_StringToCheck);
-                    break;
+                isValidInput = base.CheckLatestUserInput(i_StringToCheck, i_IndexInList);
             }
+            else
+            {
+                eCarUserDialogueListIndex dialogueListIndex = (eCarUserDialogueListIndex)i_IndexInList;
 
+                switch (dialogueListIndex)
+                {
+                    case eCarUserDialogueListIndex.Color:
+                        isValidInput = CheckEnumSelect<Car.eColor>(i_StringToCheck);
+                        break;
+                    case eCarUserDialogueListIndex.NumberOfDoors:
+                        isValidInput = CheckEnumSelect<Car.eNumberOfDoors>(i_StringToCheck);
+                        break;
+                }
+            }
 
             return isValidInput;
         }
 
-        public override void UpdateProperties(List<string> userDialogueInputsList)
+        public override void UpdateProperties(List<string> i_UserDialogueInputsList)
         {
+            base.UpdateProperties(i_UserDialogueInputsList);
+            float currentWheelAirPressure = float.Parse(
+                i_UserDialogueInputsList[(int)eVehicleUserDialogueListIndex.CurrentWheelAirPressure]);
+            int numberOfDoors = int.Parse(i_UserDialogueInputsList[(int)eCarUserDialogueListIndex.NumberOfDoors]);
+            int carColor = int.Parse(i_UserDialogueInputsList[(int)eCarUserDialogueListIndex.Color]);
 
+            InitializeWheelsList(
+                eNumberOfWheels.Car,
+                i_UserDialogueInputsList[(int)eVehicleUserDialogueListIndex.WheelManufacturer],
+                currentWheelAirPressure,
+                Wheel.eMaxAirPressure.Car);
+            m_NumberOfDoors = (eNumberOfDoors)numberOfDoors;
+            m_CarColor = (eColor)carColor;
         }
 
+        public override string ToString()
+        {
+            string carInformationOutput = string.Format(
+@"{0}
+Number of Wheels: {1}
+Car Information
+Color: {2}
+Number of Doors: {3}",
+                VehicleToString(),
+                eNumberOfWheels.Car,
+                m_CarColor.ToString(),
+                m_NumberOfDoors);
+
+            return carInformationOutput;
+        }
     }
 
 }

@@ -7,11 +7,19 @@ namespace Ex03.GarageLogic
 {
     public class Truck : Vehicle
     {
+        private const float k_MaxLoadCapacity = 9999F;
+        private const string k_Yes = "1";
         private float m_LoadCapacity;
         private bool m_IsCarryingHazardousMaterials;
 
-        public Truck(string i_LicenseNumber)
-            : base(i_LicenseNumber)
+        public enum eTruckUserDialogueListIndex
+        {
+            HazardousGoods = 4,
+            LoadCapacity
+        }
+
+        public Truck(string i_LicenseNumber, Engine.eEngineType i_EngineType, float i_MaxEngineEnergyCapacity)
+            : base(i_LicenseNumber, i_EngineType, i_MaxEngineEnergyCapacity)
         {
            
         }
@@ -42,81 +50,114 @@ namespace Ex03.GarageLogic
             }
         }
 
-
-        public override void InitializeEngine(Engine.eEngineType i_EngineType, float i_CurrentEnergyAmount)
+        public override List<string> GetUserDialogueStrings()
         {
-            m_Engine = new GasEngine(GasEngine.eGasType.Soler, i_CurrentEnergyAmount, GasEngine.eGasCapacity.Truck);
-        }
-        public override bool CheckCurrentWheelAirPressure(string i_CurrentWheelAirPressure)
-        {
-            float airPressure;
-            bool isValidAirPressure = float.TryParse(i_CurrentWheelAirPressure, out airPressure);
+            List<string> userDialogueStringList = base.GetUserDialogueStrings();
 
-            if (!isValidAirPressure)
-            {
-                throw new FormatException("Parse is failed");
-            }
-            else
-            {
-                string maxAirPressureString = Enum.GetName(typeof(VehicleCreator.eSupportedVehicles), VehicleCreator.eSupportedVehicles.Truck);
-                Wheel.eMaxAirPressure maxAirPressure = (Wheel.eMaxAirPressure)Enum.Parse(typeof(Wheel.eMaxAirPressure), maxAirPressureString);
+            userDialogueStringList.Add(
+                @"Hazardous Goods
+1   Yes
+2   No
+Is your truck carrying hazardous goods? ");
+            userDialogueStringList.Add("Load Capacity: ");
 
-                if (airPressure > (float)maxAirPressure)
-                {
-                    throw new ValueOutOfRangeException((float)Wheel.eMaxAirPressure.Truck, 0);
-                    isValidAirPressure = false;
-                }
-            }
-
-            return true;
-        }
-        public override bool CheckCurrentEnergyAmount(string i_EnergyAmount)
-        {
-            float energyAmount;
-            float maxEnergyCapacity = (float)GasEngine.eGasCapacity.Truck;
-            bool isValidEnergyAmount = float.TryParse(i_EnergyAmount, out energyAmount);
-
-            if (!isValidEnergyAmount)
-            {
-                throw new FormatException("Parse is failed");
-            }
-            else
-            {
-                if (energyAmount > maxEnergyCapacity)
-                {
-                    throw new ValueOutOfRangeException(maxEnergyCapacity, 0);
-
-                }
-            }
-
-            return true;
+            return userDialogueStringList;
         }
 
         public override bool CheckLatestUserInput(string i_StringToCheck, int i_IndexInList)
         {
             bool isValidInput = false;
 
-            switch (i_IndexInList)
+            if(i_IndexInList < 4)
             {
-                case 0:
-                    isValidInput = CheckModelName(i_StringToCheck);
-                    break;
-                case 1:
-                    isValidInput = CheckWheelManufacturer(i_StringToCheck);
-                    break;
-                case 2:
-                    isValidInput = CheckCurrentWheelAirPressure(i_StringToCheck);
-                    break;
-                case 3:
-                    isValidInput = CheckCurrentEnergyAmount(i_StringToCheck);
-                    break;
+                isValidInput = base.CheckLatestUserInput(i_StringToCheck, i_IndexInList);
             }
+            else
+            {
+                eTruckUserDialogueListIndex dialogueListIndex = (eTruckUserDialogueListIndex)i_IndexInList;
+
+                switch (dialogueListIndex)
+                {
+                    case eTruckUserDialogueListIndex.HazardousGoods:
+                        isValidInput = checkHazardousGoodsInput(i_StringToCheck);
+                        break;
+                    case eTruckUserDialogueListIndex.LoadCapacity:
+                        isValidInput = checkLoadCapacity(i_StringToCheck);
+                        break;
+                }
+            }
+            
 
             return isValidInput;
         }
-        public override void UpdateProperties(List<string> userDialogueInputsList)
+        public override void UpdateProperties(List<string> i_UserDialogueInputsList)
         {
+            base.UpdateProperties(i_UserDialogueInputsList);
+            float currentWheelAirPressure = float.Parse(
+                i_UserDialogueInputsList[(int)eVehicleUserDialogueListIndex.CurrentWheelAirPressure]);
 
+            InitializeWheelsList(
+                eNumberOfWheels.Truck,
+                i_UserDialogueInputsList[(int)eVehicleUserDialogueListIndex.WheelManufacturer],
+                currentWheelAirPressure,
+                Wheel.eMaxAirPressure.Truck);
+            m_IsCarryingHazardousMaterials =
+                i_UserDialogueInputsList[(int)eTruckUserDialogueListIndex.HazardousGoods] == k_Yes; // User inputs "1" for yes, "2" for no
+            m_LoadCapacity = float.Parse(i_UserDialogueInputsList[(int)eTruckUserDialogueListIndex.LoadCapacity]);
+        }
+
+        private bool checkLoadCapacity(string i_LoadCapacity)
+        {
+            float loadCapacity;
+            bool isValidInput = float.TryParse(i_LoadCapacity, out loadCapacity);
+            
+            if(!isValidInput)
+            {
+                throw new FormatException("Failed parse: string->float");
+            }
+
+            if(loadCapacity > k_MaxLoadCapacity)
+            {
+                throw new ValueOutOfRangeException(k_MaxLoadCapacity, 0);
+            }
+
+            return true;
+        }
+
+        private bool checkHazardousGoodsInput(string i_isCarryingHazardousGoods)
+        {
+            int userInput;
+            bool isValidInput = int.TryParse(i_isCarryingHazardousGoods, out userInput);
+
+            if (!isValidInput)
+            {
+                throw new FormatException("Failed parse: string->int");
+            }
+
+            if (userInput != 1 && userInput != 2)
+            {
+                throw new ValueOutOfRangeException(2, 1);
+            }
+
+            return true;
+        }
+
+        public override string ToString()
+        {
+            string isCarryingHazardousGoods = m_IsCarryingHazardousMaterials ? "Yes" : "No";
+
+            string truckInformationOutput = string.Format(
+                @"{0}
+Number of Wheels: {1}
+Truck Information
+Carrying Hazardous Goods: {2}
+Load Capacity: {3}",
+                VehicleToString(),
+                eNumberOfWheels.Truck,
+                isCarryingHazardousGoods,
+                m_LoadCapacity);
+
+            return truckInformationOutput;
         }
     }
 }

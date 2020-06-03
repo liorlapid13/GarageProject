@@ -13,8 +13,8 @@ namespace Ex03.GarageLogic
             Car = 126
         }
 
-        public ElectricEngine(float i_CurrentBatteryTimeLeft, eElectricEngineCapacityInMinutes i_MaxBatteryCapacity)
-            : base(((float)i_MaxBatteryCapacity) / 60, i_CurrentBatteryTimeLeft)
+        public ElectricEngine(float i_MaxEnergyCapacityInMinutes)
+            : base(i_MaxEnergyCapacityInMinutes / 60)
         {
 
         }
@@ -32,6 +32,18 @@ namespace Ex03.GarageLogic
             }
 
             m_CurrentEnergy += i_ChargeDuration;
+        }
+
+        public override string ToString()
+        {
+            string engineInformationOutput = string.Format(
+@"Engine Information
+Current Amount of Energy: {0} hours
+Max Energy Capacity: {1} hours",
+                CurrentEnergy,
+                MaxEnergyCapacity);
+
+            return engineInformationOutput;
         }
     }
 }

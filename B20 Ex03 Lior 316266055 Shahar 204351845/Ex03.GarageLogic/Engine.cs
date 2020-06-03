@@ -15,10 +15,9 @@ namespace Ex03.GarageLogic
             Electric
         }
 
-        protected Engine(float i_MaxEnergyCapacity, float i_CurrentEnergy)
+        protected Engine(float i_MaxEnergyCapacity)
         {
             r_MaxEnergyCapacity = i_MaxEnergyCapacity;
-            m_CurrentEnergy = i_CurrentEnergy;
         }
 
         public float MaxEnergyCapacity
@@ -43,5 +42,7 @@ namespace Ex03.GarageLogic
         }
 
         protected abstract void addEnergy(float i_AmountOfEnergyToAdd);
+
+        public abstract override string ToString();
     }
 }

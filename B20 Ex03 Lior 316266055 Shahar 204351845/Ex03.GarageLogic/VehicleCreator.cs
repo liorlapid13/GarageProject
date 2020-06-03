@@ -9,8 +9,10 @@ namespace Ex03.GarageLogic
     {
         public enum eSupportedVehicles
         {
-            Motorcycle = 1,
-            Car,
+            ElectricMotorcycle = 1,
+            GasMotorcycle,
+            ElectricCar,
+            GasCar,
             Truck
         }
 
@@ -20,16 +22,35 @@ namespace Ex03.GarageLogic
 
             switch(i_VehicleType)
             {
-                case eSupportedVehicles.Car:
-                    newVehicle = new Car(i_LicenseNumber);
+                case eSupportedVehicles.GasCar:
+                    newVehicle = new Car(
+                        i_LicenseNumber, 
+                        Engine.eEngineType.Gas, 
+                        (float)GasEngine.eGasCapacity.Car);
                     break;
-
+                case eSupportedVehicles.ElectricCar:
+                    newVehicle = new Car(
+                        i_LicenseNumber,
+                        Engine.eEngineType.Electric,
+                        (float)ElectricEngine.eElectricEngineCapacityInMinutes.Car);
+                    break;
                 case eSupportedVehicles.Truck:
-                    newVehicle = new Truck(i_LicenseNumber);
+                    newVehicle = new Truck(
+                        i_LicenseNumber,
+                        Engine.eEngineType.Gas,
+                        (float)GasEngine.eGasCapacity.Truck);
                     break;
-
-                case eSupportedVehicles.Motorcycle:
-                    newVehicle = new Motorcycle(i_LicenseNumber);
+                case eSupportedVehicles.ElectricMotorcycle:
+                    newVehicle = new Motorcycle(
+                        i_LicenseNumber,
+                        Engine.eEngineType.Electric,
+                        (float)ElectricEngine.eElectricEngineCapacityInMinutes.Motorcycle);
+                    break;
+                case eSupportedVehicles.GasMotorcycle:
+                    newVehicle = new Motorcycle(
+                        i_LicenseNumber,
+                        Engine.eEngineType.Gas,
+                        (float)GasEngine.eGasCapacity.Motorcycle);
                     break;
             }
 

@@ -23,27 +23,10 @@ namespace Ex03.GarageLogic
 
         public void AddVehicleToGarage(string i_LicenseNumber, string i_OwnerName, string i_OwnerPhoneNumber, Vehicle i_Vehicle)
         {
-            bool isVehicleInGarage = false;
+            VehicleInformation newVehicleInformation =
+                new VehicleInformation(i_OwnerName, i_OwnerPhoneNumber, i_Vehicle);
 
-            foreach(KeyValuePair<string,VehicleInformation> item in m_VehiclesInGarage)
-            {
-                if(i_LicenseNumber == item.Key)
-                {
-                    item.Value.VehicleStatus = VehicleInformation.eVehicleStatus.InService;
-                    isVehicleInGarage = true;
-                    break;
-                }
-            }
-
-            if(!isVehicleInGarage)
-            {
-                VehicleInformation newVehicleInformation = new VehicleInformation(i_OwnerName, i_OwnerPhoneNumber, i_Vehicle);
-                m_VehiclesInGarage.Add(i_LicenseNumber, newVehicleInformation);
-            }
-            else
-            {
-                throw new ArgumentException("Vehicle already in garage, status changed to 'InService'");
-            }
+            m_VehiclesInGarage.Add(i_LicenseNumber, newVehicleInformation);
         }
 
         public bool CheckIfVehicleExistsInGarage(string i_LicenseNumber)

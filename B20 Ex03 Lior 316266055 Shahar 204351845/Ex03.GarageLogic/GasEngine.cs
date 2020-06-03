@@ -6,7 +6,7 @@ namespace Ex03.GarageLogic
 {
     public class GasEngine : Engine
     {
-        private readonly eGasType r_GasType;
+        private eGasType m_GasType;
 
         public enum eGasType
         {
@@ -14,6 +14,12 @@ namespace Ex03.GarageLogic
             Octan95,
             Octan96,
             Octan98
+        }
+
+        public GasEngine(float i_MaxGasCapacity)
+            : base(i_MaxGasCapacity)
+        {
+            
         }
 
         public enum eGasCapacity
@@ -27,14 +33,13 @@ namespace Ex03.GarageLogic
         {
             get
             {
-                return r_GasType;
+                return m_GasType;
             }
-        }
 
-        public GasEngine(eGasType i_GasType, float i_CurrentGasAmount, eGasCapacity i_MaxGasCapacity)
-            : base(((float)i_MaxGasCapacity) / 60, i_CurrentGasAmount)
-        {
-            r_GasType = i_GasType;
+            set
+            {
+                m_GasType = value;
+            }
         }
 
         protected override void addEnergy(float i_AmountOfGasToAdd)
@@ -50,6 +55,20 @@ namespace Ex03.GarageLogic
             }
 
             m_CurrentEnergy += i_AmountOfGasToAdd;
+        }
+
+        public override string ToString()
+        {
+            string engineInformationOutput = string.Format(
+@"Engine Information
+Gas Type: {0}
+Current Amount of Gas: {1} liters
+Max Gas Capacity: {2} liters",
+                m_GasType.ToString(),
+                CurrentEnergy,
+                MaxEnergyCapacity);
+
+            return engineInformationOutput;
         }
     }
 }

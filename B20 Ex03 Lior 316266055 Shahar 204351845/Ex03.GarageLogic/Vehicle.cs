@@ -132,16 +132,10 @@ namespace Ex03.GarageLogic
         public virtual void UpdateProperties(List<string> i_UserDialogueInputsList)
         {
             m_ModelName = i_UserDialogueInputsList[(int)eVehicleUserDialogueListIndex.ModelName];
-            m_Engine.CurrentEnergy = float.Parse(i_UserDialogueInputsList[(int)eVehicleUserDialogueListIndex.CurrentEnergyAmount]);
+            m_Engine.CurrentEnergy = float.Parse(
+                i_UserDialogueInputsList[(int)eVehicleUserDialogueListIndex.CurrentEnergyAmount]);
 
             m_EnergyPercentageLeft = m_Engine.CurrentEnergy / m_Engine.MaxEnergyCapacity * 100;
-
-            GasEngine gasEngine = m_Engine as GasEngine;
-
-            if(gasEngine != null)
-            {
-               gasEngine.GasType = (GasEngine.eGasType)Enum.Parse(typeof(GasEngine.eGasType), GetType().Name);
-            }
         }
 
         private bool checkCurrentEnergyAmountInput(string i_CurrentEnergyAmountInput)
@@ -210,15 +204,15 @@ namespace Ex03.GarageLogic
         protected string VehicleToString()
         {
             string vehicleInformationOutput = string.Format(
-                @"Vehicle Information
+@"Vehicle Information
 License Number: {0}
 Model Name: {1}
-Engine Information
-{2}
-Wheel Information
-{3}",
+Current EnergyPercentageLeft:{2}%
+{3}
+{4}",
                 r_LicenseNumber,
                 m_ModelName,
+                m_EnergyPercentageLeft,
                 m_Engine.ToString(),
                 m_Wheels[0].ToString());
 

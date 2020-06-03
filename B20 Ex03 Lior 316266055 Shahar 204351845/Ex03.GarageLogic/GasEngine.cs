@@ -59,6 +59,7 @@ namespace Ex03.GarageLogic
 
         public override string ToString()
         {
+           
             string engineInformationOutput = string.Format(
 @"Engine Information
 Gas Type: {0}

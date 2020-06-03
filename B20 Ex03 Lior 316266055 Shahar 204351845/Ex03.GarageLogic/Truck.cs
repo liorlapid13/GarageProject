@@ -95,7 +95,9 @@ Is your truck carrying hazardous goods? ");
             base.UpdateProperties(i_UserDialogueInputsList);
             float currentWheelAirPressure = float.Parse(
                 i_UserDialogueInputsList[(int)eVehicleUserDialogueListIndex.CurrentWheelAirPressure]);
+            GasEngine gasEngine = m_Engine as GasEngine;
 
+            gasEngine.GasType = GasEngine.eGasType.Soler;
             InitializeWheelsList(
                 eNumberOfWheels.Truck,
                 i_UserDialogueInputsList[(int)eVehicleUserDialogueListIndex.WheelManufacturer],
@@ -147,7 +149,7 @@ Is your truck carrying hazardous goods? ");
             string isCarryingHazardousGoods = m_IsCarryingHazardousMaterials ? "Yes" : "No";
 
             string truckInformationOutput = string.Format(
-                @"{0}
+@"{0}
 Number of Wheels: {1}
 Truck Information
 Carrying Hazardous Goods: {2}

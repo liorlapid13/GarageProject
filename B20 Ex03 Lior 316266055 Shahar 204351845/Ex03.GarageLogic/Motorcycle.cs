@@ -98,6 +98,12 @@ What is your license type? ");
             float currentWheelAirPressure = float.Parse(
                 i_UserDialogueInputsList[(int)eVehicleUserDialogueListIndex.CurrentWheelAirPressure]);
             int licenseType = int.Parse(i_UserDialogueInputsList[(int)eMotorcycleUserDialogueListIndex.LicenseType]);
+            GasEngine gasEngine = m_Engine as GasEngine;
+
+            if (gasEngine != null)
+            {
+                gasEngine.GasType = GasEngine.eGasType.Octan95;
+            }
 
             InitializeWheelsList(
                 eNumberOfWheels.Truck,

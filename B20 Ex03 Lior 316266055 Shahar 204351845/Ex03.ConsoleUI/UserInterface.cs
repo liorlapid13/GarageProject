@@ -46,7 +46,8 @@ namespace Ex03.ConsoleUI
                 case eGarageActions.InsertNewVehicle:
                     //getNewVehicleInformationAndInsertToGarage();
                     addNewVehicleToGarage();
-                    r_Garage.VehicleDictionary["1234567"].Vehicle.ToString();
+                    Console.Clear();
+                    Console.WriteLine(r_Garage.VehicleDictionary["1234567"].Vehicle.ToString());
                     break;
 
             }

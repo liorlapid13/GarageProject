@@ -11,7 +11,7 @@ namespace Ex03.GarageLogic
 
         public enum eColor
         {
-            Red,
+            Red=1,
             White,
             Black,
             Silver
@@ -117,6 +117,13 @@ How many doors does your car have? ");
             int numberOfDoors = int.Parse(i_UserDialogueInputsList[(int)eCarUserDialogueListIndex.NumberOfDoors]);
             int carColor = int.Parse(i_UserDialogueInputsList[(int)eCarUserDialogueListIndex.Color]);
 
+            GasEngine gasEngine = m_Engine as GasEngine;
+
+            if (gasEngine != null)
+            {
+                gasEngine.GasType = GasEngine.eGasType.Octan96;
+            }
+
             InitializeWheelsList(
                 eNumberOfWheels.Car,
                 i_UserDialogueInputsList[(int)eVehicleUserDialogueListIndex.WheelManufacturer],
@@ -135,9 +142,9 @@ Car Information
 Color: {2}
 Number of Doors: {3}",
                 VehicleToString(),
-                eNumberOfWheels.Car,
+                ((int)eNumberOfWheels.Car).ToString(),
                 m_CarColor.ToString(),
-                m_NumberOfDoors);
+                (int)m_NumberOfDoors);
 
             return carInformationOutput;
         }

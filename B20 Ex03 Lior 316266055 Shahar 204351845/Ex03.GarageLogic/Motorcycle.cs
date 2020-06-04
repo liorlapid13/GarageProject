@@ -138,11 +138,11 @@ What is your license type? ");
             string motorcycleInformationOutput = string.Format(
                 @"{0}
 Number of Wheels: {1}
-Truck Information
+Motorcycle Information
 License Type: {2}
 Engine Capacity: {3}cc",
                 VehicleToString(),
-                eNumberOfWheels.Motorcycle,
+                (int)eNumberOfWheels.Motorcycle,
                 m_LicenseType.ToString(),
                 m_EngineCapacity);
 

@@ -7,7 +7,7 @@ namespace Ex03.GarageLogic
     public class Garage
     {
         private Dictionary<string, VehicleInformation> m_VehiclesInGarage;
-        
+
         public Garage()
         {
             m_VehiclesInGarage = new Dictionary<string, VehicleInformation>();
@@ -36,7 +36,10 @@ namespace Ex03.GarageLogic
 
         public void ChangeVehicleStatus(string i_LicenseNumber, VehicleInformation.eVehicleStatus i_NewVehicleStatus)
         {
-            m_VehiclesInGarage[i_LicenseNumber].VehicleStatus = i_NewVehicleStatus;
+            if(i_NewVehicleStatus != m_VehiclesInGarage[i_LicenseNumber].VehicleStatus)
+            {
+                m_VehiclesInGarage[i_LicenseNumber].VehicleStatus = i_NewVehicleStatus;
+            }
         }
 
         public class VehicleInformation

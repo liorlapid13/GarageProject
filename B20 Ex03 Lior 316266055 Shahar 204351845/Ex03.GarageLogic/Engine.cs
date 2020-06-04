@@ -40,8 +40,8 @@ namespace Ex03.GarageLogic
                 m_CurrentEnergy = value;
             }
         }
-
-        protected abstract void addEnergy(float i_AmountOfEnergyToAdd);
+        
+        public abstract void AddEnergy(float i_AmountOfEnergyToAdd);
 
         public abstract override string ToString();
     }

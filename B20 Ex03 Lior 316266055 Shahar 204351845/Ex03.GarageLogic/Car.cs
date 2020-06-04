@@ -119,7 +119,7 @@ How many doors does your car have? ");
 
             GasEngine gasEngine = m_Engine as GasEngine;
 
-            if (gasEngine != null)
+            if(gasEngine != null)
             {
                 gasEngine.GasType = GasEngine.eGasType.Octan96;
             }

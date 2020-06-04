@@ -19,7 +19,7 @@ namespace Ex03.GarageLogic
 
         }
 
-        protected override void addEnergy(float i_ChargeDuration)
+        public override void AddEnergy(float i_ChargeDuration)
         {
             chargeBattery(i_ChargeDuration);
         }

@@ -54,20 +54,15 @@ namespace Ex03.GarageLogic
             }
         }
 
-        public void InflateWheel(float i_AmountOfAirToAdd)
+        public void InflateWheel()
         {
-            if(m_CurrentAirPressure + i_AmountOfAirToAdd > r_MaxAirPressure)
-            {
-                throw new ValueOutOfRangeException(r_MaxAirPressure, 0);
-            }
-
-            CurrentAirPressure += i_AmountOfAirToAdd;
+            m_CurrentAirPressure = r_MaxAirPressure;
         }
 
         public override string ToString()
         {
            
-            string wheelInformationOutput = String.Format(
+            string wheelInformationOutput = string.Format(
  @"Wheel Information
 Manufacturer: {0}
 Current Air Pressure: {1}

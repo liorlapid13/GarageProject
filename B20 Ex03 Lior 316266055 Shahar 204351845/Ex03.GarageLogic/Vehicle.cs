@@ -70,6 +70,30 @@ namespace Ex03.GarageLogic
             }
         }
 
+        public Engine Engine
+        {
+            get
+            {
+                return m_Engine;
+            }
+        }
+
+        public List<Wheel> Wheels
+        {
+            get
+            {
+                return m_Wheels;
+            }
+        }
+
+        public void InflateAllWheels()
+        {
+            foreach(Wheel wheel in m_Wheels)
+            {
+                wheel.InflateWheel();
+            }
+        }
+
         public void InitializeWheelsList(
             eNumberOfWheels i_NumberOfWheels,
             string i_Manufacturer,
@@ -207,7 +231,7 @@ namespace Ex03.GarageLogic
 @"Vehicle Information
 License Number: {0}
 Model Name: {1}
-Current EnergyPercentageLeft:{2}%
+Energy Percentage Left: {2}%
 {3}
 {4}",
                 r_LicenseNumber,

@@ -155,7 +155,7 @@ Truck Information
 Carrying Hazardous Goods: {2}
 Load Capacity: {3}",
                 VehicleToString(),
-                eNumberOfWheels.Truck,
+                (int)eNumberOfWheels.Truck,
                 isCarryingHazardousGoods,
                 m_LoadCapacity);
 

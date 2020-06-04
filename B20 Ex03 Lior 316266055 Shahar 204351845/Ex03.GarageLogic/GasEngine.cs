@@ -42,7 +42,7 @@ namespace Ex03.GarageLogic
             }
         }
 
-        protected override void addEnergy(float i_AmountOfGasToAdd)
+        public override void AddEnergy(float i_AmountOfGasToAdd)
         {
             fillGasTank(i_AmountOfGasToAdd);
         }

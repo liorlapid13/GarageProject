@@ -19,9 +19,14 @@ namespace Ex03.GarageLogic
 
         }
 
-        public override void AddEnergy(float i_ChargeDuration)
+        public override void AddEnergy(float i_ChargeDurationInMinutes)
         {
-            chargeBattery(i_ChargeDuration);
+            if(i_ChargeDurationInMinutes <= 0)
+            {
+                throw new ArgumentException("Non-positive number entered");
+            }
+
+            chargeBattery(i_ChargeDurationInMinutes / 60);
         }
 
         private void chargeBattery(float i_ChargeDuration)

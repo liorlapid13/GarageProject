@@ -44,12 +44,17 @@ namespace Ex03.GarageLogic
 
         public override void AddEnergy(float i_AmountOfGasToAdd)
         {
+            if(i_AmountOfGasToAdd <= 0)
+            {
+                throw new ArgumentException("Non-positive number entered");
+            }
+
             fillGasTank(i_AmountOfGasToAdd);
         }
 
         private void fillGasTank(float i_AmountOfGasToAdd)
         {
-            if(m_CurrentEnergy + i_AmountOfGasToAdd < r_MaxEnergyCapacity)
+            if(m_CurrentEnergy + i_AmountOfGasToAdd > r_MaxEnergyCapacity)
             {
                 throw new ValueOutOfRangeException(r_MaxEnergyCapacity, 0);
             }
@@ -70,6 +75,14 @@ Max Gas Capacity: {2} liters",
                 MaxEnergyCapacity);
 
             return engineInformationOutput;
+        }
+
+        public void CheckGasType(eGasType i_GasType)
+        {
+            if(m_GasType != i_GasType)
+            {
+                throw new ArgumentException("Incompatible gas type");
+            }
         }
     }
 }

@@ -19,7 +19,7 @@ namespace Ex03.ConsoleUI
             ChangeVehicleStatus,
             InflateWheels,
             RefuelVehicle,
-            RechargeVehicle,
+            ChargeVehicle,
             DisplayVehicleInformation,
             ExitProgram
         }
@@ -69,6 +69,12 @@ namespace Ex03.ConsoleUI
                     break;
                 case eGarageActions.InflateWheels:
                     inflateWheels();
+                    break;
+                case eGarageActions.RefuelVehicle:
+                    refuelVehicle();
+                    break;
+                case eGarageActions.ChargeVehicle:
+                    chargeVehicle();
                     break;
             }
         }
@@ -344,7 +350,7 @@ Please select desired status: ");
             }
         }
 
-        private void refuelCar()
+        private void refuelVehicle()
         {
             string licenseNumber = receiveLicenseNumberInput();
 
@@ -354,14 +360,7 @@ Please select desired status: ");
 
                 if (vehicleEngine != null)
                 {
-                    Console.Write(
-@"Gas Type
-1   Soler
-2   Octan95
-3   Octan96
-4   Octan98
-Please select gas type: ");
-                    int gasType = receiveEnumInput<GasEngine.eGasType>();
+                    receiveFuelInputAndRefuelVehicle(vehicleEngine);
                 }
                 else
                 {
@@ -374,6 +373,123 @@ Please select gas type: ");
                     "There is no vehicle with license number: {0} in the garage, returning to main menu..",
                     licenseNumber);
             }
+        }
+
+        private void receiveFuelInputAndRefuelVehicle(GasEngine i_Engine)
+        {
+            Console.Write(
+@"Gas Type
+1   Soler
+2   Octan95
+3   Octan96
+4   Octan98
+Please select gas type: ");
+            bool isValidGasType = false;
+
+            do
+            {
+                try
+                {
+                    int gasType = receiveEnumInput<GasEngine.eGasType>();
+                    i_Engine.CheckGasType((GasEngine.eGasType)gasType);
+                    isValidGasType = true;
+                }
+                catch (ArgumentException argumentException)
+                {
+                    Console.Write("Incompatible gas type selected, this vehicle takes {0}, please try again: ", i_Engine.GasType);
+                }
+            }
+            while (!isValidGasType);
+
+            bool isValidGasAmount = false;
+
+            Console.Write(
+@"Your vehicle has {0}l out of {1}l
+How much gas would you like to add? ",
+                i_Engine.CurrentEnergy,
+                i_Engine.MaxEnergyCapacity);
+            do
+            {
+                try
+                {
+                    string amountOfGasInput = Console.ReadLine();
+                    float amountOfGasToAdd = float.Parse(amountOfGasInput);
+                    i_Engine.AddEnergy(amountOfGasToAdd);
+                    isValidGasAmount = true;
+                }
+                catch(ArgumentException argumentException)
+                {
+                    Console.Write("You must enter a positive number, please try again: ");
+                }
+                catch(FormatException formatException)
+                {
+                    Console.Write("You must enter a number, please try again: ");
+                }
+                catch (ValueOutOfRangeException valueOutOfRangeException)
+                {
+                    Console.Write("That is too much gas, please try again: ");
+                }
+            }
+            while(!isValidGasAmount);
+        }
+
+        private void chargeVehicle()
+        {
+            string licenseNumber = receiveLicenseNumberInput();
+
+            if(r_Garage.CheckIfVehicleExistsInGarage(licenseNumber))
+            {
+                ElectricEngine vehicleEngine = r_Garage.VehicleDictionary[licenseNumber].Vehicle.Engine as ElectricEngine;
+
+                if (vehicleEngine != null)
+                {
+                    receiveEnergyInputAndChargeVehicle(vehicleEngine);
+                }
+                else
+                {
+                    Console.Write("This vehicle is not electric-powered, returning to main menu..");
+                }
+            }
+            else
+            {
+                Console.WriteLine(
+                    "There is no vehicle with license number: {0} in the garage, returning to main menu..",
+                    licenseNumber);
+            }
+        }
+
+        private void receiveEnergyInputAndChargeVehicle(ElectricEngine i_Engine)
+        {
+            bool isValidEnergyAmount = false;
+
+            Console.Write(
+@"Your vehicle has {0}h out of {1}h
+For how many minutes would you like to charge the vehicle? ",
+                i_Engine.CurrentEnergy,
+                i_Engine.MaxEnergyCapacity);
+            do
+            {
+                try
+                {
+                    string amountOfEnergyInput = Console.ReadLine();
+                    float amountOfEnergyToAdd = float.Parse(amountOfEnergyInput);
+                    i_Engine.AddEnergy(amountOfEnergyToAdd);
+                    isValidEnergyAmount = true;
+                }
+                catch (ArgumentException argumentException)
+                {
+                    Console.Write("You must enter a positive number, please try again: ");
+                }
+                catch (FormatException formatException)
+                {
+                    Console.Write("You must enter a number, please try again: ");
+                }
+                catch (ValueOutOfRangeException valueOutOfRangeException)
+                {
+                    Console.Write("That is too much energy, please try again: ");
+                }
+            }
+            while (!isValidEnergyAmount);
         }
     }
 }

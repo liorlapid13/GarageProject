@@ -44,9 +44,9 @@ namespace Ex03.GarageLogic
 
         public override void AddEnergy(float i_AmountOfGasToAdd)
         {
-            if(i_AmountOfGasToAdd <= 0)
+            if(i_AmountOfGasToAdd < 0)
             {
-                throw new ArgumentException("Non-positive number entered");
+                throw new ArgumentException("Negative number entered");
             }
 
             fillGasTank(i_AmountOfGasToAdd);
@@ -66,8 +66,7 @@ namespace Ex03.GarageLogic
         {
            
             string engineInformationOutput = string.Format(
-@"Engine Information
-Gas Type: {0}
+@"Gas Type: {0}
 Current Amount of Gas: {1} liters
 Max Gas Capacity: {2} liters",
                 m_GasType.ToString(),

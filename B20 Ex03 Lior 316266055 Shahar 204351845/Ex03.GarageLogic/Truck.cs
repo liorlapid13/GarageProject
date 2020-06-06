@@ -151,7 +151,6 @@ Is your truck carrying hazardous goods? ");
             string truckInformationOutput = string.Format(
 @"{0}
 Number of Wheels: {1}
-Truck Information
 Carrying Hazardous Goods: {2}
 Load Capacity: {3}",
                 VehicleToString(),

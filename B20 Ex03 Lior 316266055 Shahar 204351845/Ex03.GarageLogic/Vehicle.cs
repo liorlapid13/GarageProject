@@ -86,14 +86,6 @@ namespace Ex03.GarageLogic
             }
         }
 
-        public void InflateAllWheels()
-        {
-            foreach(Wheel wheel in m_Wheels)
-            {
-                wheel.InflateWheel();
-            }
-        }
-
         public void InitializeWheelsList(
             eNumberOfWheels i_NumberOfWheels,
             string i_Manufacturer,
@@ -105,6 +97,21 @@ namespace Ex03.GarageLogic
             for(int i = 0; i < (int)i_NumberOfWheels; i++)
             {
                 m_Wheels.Add(new Wheel((float)i_MaxAirPressure, i_CurrentAirPressure, i_Manufacturer));
+            }
+        }
+
+        public void InflateAllWheelsToMax()
+        {
+            float missingAirPressure = m_Wheels[0].MaxAirPressure - m_Wheels[0].CurrentAirPressure;
+
+            if(missingAirPressure == 0)
+            {
+                throw new ArgumentException("Attempt to over-inflate wheels");
+            }
+
+            foreach(Wheel wheel in m_Wheels)
+            {
+                wheel.InflateWheel(missingAirPressure);
             }
         }
 
@@ -228,8 +235,7 @@ namespace Ex03.GarageLogic
         protected string VehicleToString()
         {
             string vehicleInformationOutput = string.Format(
-@"Vehicle Information
-License Number: {0}
+@"License Number: {0}
 Model Name: {1}
 Energy Percentage Left: {2}%
 {3}

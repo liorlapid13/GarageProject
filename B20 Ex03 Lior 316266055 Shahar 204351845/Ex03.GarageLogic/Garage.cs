@@ -42,6 +42,11 @@ namespace Ex03.GarageLogic
             }
         }
 
+        public string PrintVehicleDetails(string licenseNumber)
+        {
+            return m_VehiclesInGarage[licenseNumber].ToString();
+        }
+
         public class VehicleInformation
         {
             private readonly string r_OwnerName;
@@ -99,6 +104,21 @@ namespace Ex03.GarageLogic
                 {
                     return m_Vehicle;
                 }
+            }
+
+            public override string ToString()
+            {
+                string vehicleInformationOutput = string.Format(
+@"Name: {0}
+Phone Number: {1}
+Vehicle Status: {2}
+{3}",
+                    r_OwnerName,
+                    r_OwnerPhoneNumber,
+                    m_VehicleStatus,
+                    m_Vehicle.ToString());
+
+                return vehicleInformationOutput;
             }
         }
     }

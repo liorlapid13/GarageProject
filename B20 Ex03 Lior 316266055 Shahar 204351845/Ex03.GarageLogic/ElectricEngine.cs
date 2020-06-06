@@ -21,9 +21,9 @@ namespace Ex03.GarageLogic
 
         public override void AddEnergy(float i_ChargeDurationInMinutes)
         {
-            if(i_ChargeDurationInMinutes <= 0)
+            if(i_ChargeDurationInMinutes < 0)
             {
-                throw new ArgumentException("Non-positive number entered");
+                throw new ArgumentException("Negative number entered");
             }
 
             chargeBattery(i_ChargeDurationInMinutes / 60);
@@ -42,8 +42,7 @@ namespace Ex03.GarageLogic
         public override string ToString()
         {
             string engineInformationOutput = string.Format(
-@"Engine Information
-Current Amount of Energy: {0} hours
+@"Current Amount of Energy: {0} hours
 Max Energy Capacity: {1} hours",
                 CurrentEnergy,
                 MaxEnergyCapacity);

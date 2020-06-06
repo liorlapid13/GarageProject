@@ -17,7 +17,7 @@ namespace Ex03.ConsoleUI
             InsertNewVehicle = 1,
             ShowAllLicensePlatesOfVehiclesInGarage,
             ChangeVehicleStatus,
-            InflateWheels,
+            InflateWheelsToMaximum,
             RefuelVehicle,
             ChargeVehicle,
             DisplayVehicleInformation,
@@ -50,12 +50,16 @@ namespace Ex03.ConsoleUI
                 }
 
                 performGarageAction((eGarageActions)menuOption);
-                Console.Clear();
+                if(!terminateProgram)
+                {
+                    pauseAndPressEnterToContinue();
+                }
             }
         }
 
         private void performGarageAction(eGarageActions userMenuSelection)
         {
+            Console.Clear();
             switch(userMenuSelection)
             {
                 case eGarageActions.InsertNewVehicle:
@@ -67,14 +71,20 @@ namespace Ex03.ConsoleUI
                 case eGarageActions.ChangeVehicleStatus:
                     changeVehicleStatus();
                     break;
-                case eGarageActions.InflateWheels:
-                    inflateWheels();
+                case eGarageActions.InflateWheelsToMaximum:
+                    inflateWheelsToMaximum();
                     break;
                 case eGarageActions.RefuelVehicle:
                     refuelVehicle();
                     break;
                 case eGarageActions.ChargeVehicle:
                     chargeVehicle();
+                    break;
+                case eGarageActions.DisplayVehicleInformation:
+                    searchAndPresentVehicleByLicenseNumber();
+                    break;
+                case eGarageActions.ExitProgram:
+                    terminateProgramMessage();
                     break;
             }
         }
@@ -126,11 +136,11 @@ namespace Ex03.ConsoleUI
         private void presentUserMenu()
         {
             Console.Write(
-@"Welcome to the Garage!
+@"Garage Main Menu
 1   Insert a new vehicle
 2   Show all vehicles
 3   Change vehicle status
-4   Inflate tires
+4   Inflate tires to maximum
 5   Refuel vehicle
 6   Recharge vehicle
 7   Display vehicle information
@@ -179,6 +189,7 @@ What would you like to do? ");
             {
                 Vehicle newVehicle = createNewVehicle(licenseNumber);
                 insertNewVehicleToGarage(licenseNumber, newVehicle);
+                Console.WriteLine("Vehicle successfully added to garage");
             }
         }
 
@@ -231,7 +242,7 @@ What would you like to do? ");
                             userDialogueInputsList.Add(userInput);
                         }
                     }
-                    catch (FormatException)
+                    catch (FormatException formatException)
                     {
                         Console.Write("Invalid input, please try again: ");
                     }
@@ -301,7 +312,7 @@ Please select a filter option: ");
             }
             else
             {
-                Console.WriteLine("All vehicles with status: {0} in garage", i_VehicleStatusToPresent.Value);
+                Console.WriteLine("All vehicles with status: '{0}' in garage", i_VehicleStatusToPresent.Value);
                 foreach(KeyValuePair<string, Garage.VehicleInformation> vehicleInformation in r_Garage.VehicleDictionary)
                 {
                     if(vehicleInformation.Value.VehicleStatus == i_VehicleStatusToPresent.Value)
@@ -327,26 +338,33 @@ Please select desired status: ");
                 int userSelection = receiveEnumInput<Garage.VehicleInformation.eVehicleStatus>();
 
                 r_Garage.ChangeVehicleStatus(licenseNumber, (Garage.VehicleInformation.eVehicleStatus)userSelection);
+                Console.WriteLine("Vehicle status is now {0}", (Garage.VehicleInformation.eVehicleStatus)userSelection);
             }
             else
             {
-                Console.WriteLine("There is no vehicle with license number: {0} in the garage, returning to main menu..", licenseNumber);
+                Console.WriteLine("There is no vehicle with license number: {0} in the garage", licenseNumber);
             }
         }
 
-        private void inflateWheels()
+        private void inflateWheelsToMaximum()
         {
             string licenseNumber = receiveLicenseNumberInput();
 
-            if (r_Garage.CheckIfVehicleExistsInGarage(licenseNumber))
+            if(r_Garage.CheckIfVehicleExistsInGarage(licenseNumber))
             {
-                r_Garage.VehicleDictionary[licenseNumber].Vehicle.InflateAllWheels();
+                try
+                {
+                    r_Garage.VehicleDictionary[licenseNumber].Vehicle.InflateAllWheelsToMax();
+                    Console.WriteLine("Wheels inflated to maximum");
+                }
+                catch(ArgumentException argumentException)
+                {
+                    Console.WriteLine("Wheels are already full of air");
+                }
             }
             else
             {
-                Console.WriteLine(
-                    "There is no vehicle with license number: {0} in the garage, returning to main menu..",
-                    licenseNumber);
+                Console.WriteLine("There is no vehicle with license number: {0} in the garage", licenseNumber);
             }
         }
 
@@ -354,24 +372,23 @@ Please select desired status: ");
         {
             string licenseNumber = receiveLicenseNumberInput();
 
-            if (r_Garage.CheckIfVehicleExistsInGarage(licenseNumber))
+            if(r_Garage.CheckIfVehicleExistsInGarage(licenseNumber))
             {
                 GasEngine vehicleEngine = r_Garage.VehicleDictionary[licenseNumber].Vehicle.Engine as GasEngine;
 
-                if (vehicleEngine != null)
+                if(vehicleEngine != null)
                 {
                     receiveFuelInputAndRefuelVehicle(vehicleEngine);
+                    Console.WriteLine("Vehicle refueled successfully");
                 }
                 else
                 {
-                    Console.Write("This vehicle is not gas-powered, returning to main menu..");
+                    Console.WriteLine("This vehicle is not gas-powered");
                 }
             }
             else
             {
-                Console.WriteLine(
-                    "There is no vehicle with license number: {0} in the garage, returning to main menu..",
-                    licenseNumber);
+                Console.WriteLine("There is no vehicle with license number: {0} in the garage", licenseNumber);
             }
         }
 
@@ -394,12 +411,12 @@ Please select gas type: ");
                     i_Engine.CheckGasType((GasEngine.eGasType)gasType);
                     isValidGasType = true;
                 }
-                catch (ArgumentException argumentException)
+                catch(ArgumentException argumentException)
                 {
                     Console.Write("Incompatible gas type selected, this vehicle takes {0}, please try again: ", i_Engine.GasType);
                 }
             }
-            while (!isValidGasType);
+            while(!isValidGasType);
 
             bool isValidGasAmount = false;
 
@@ -425,7 +442,7 @@ How much gas would you like to add? ",
                 {
                     Console.Write("You must enter a number, please try again: ");
                 }
-                catch (ValueOutOfRangeException valueOutOfRangeException)
+                catch(ValueOutOfRangeException valueOutOfRangeException)
                 {
                     Console.Write("That is too much gas, please try again: ");
                 }
@@ -441,20 +458,19 @@ How much gas would you like to add? ",
             {
                 ElectricEngine vehicleEngine = r_Garage.VehicleDictionary[licenseNumber].Vehicle.Engine as ElectricEngine;
 
-                if (vehicleEngine != null)
+                if(vehicleEngine != null)
                 {
                     receiveEnergyInputAndChargeVehicle(vehicleEngine);
+                    Console.WriteLine("Vehicle charged successfully");
                 }
                 else
                 {
-                    Console.Write("This vehicle is not electric-powered, returning to main menu..");
+                    Console.WriteLine("This vehicle is not electric-powered");
                 }
             }
             else
             {
-                Console.WriteLine(
-                    "There is no vehicle with license number: {0} in the garage, returning to main menu..",
-                    licenseNumber);
+                Console.WriteLine("There is no vehicle with license number: {0} in the garage", licenseNumber);
             }
         }
 
@@ -476,20 +492,46 @@ For how many minutes would you like to charge the vehicle? ",
                     i_Engine.AddEnergy(amountOfEnergyToAdd);
                     isValidEnergyAmount = true;
                 }
-                catch (ArgumentException argumentException)
+                catch(ArgumentException argumentException)
                 {
                     Console.Write("You must enter a positive number, please try again: ");
                 }
-                catch (FormatException formatException)
+                catch(FormatException formatException)
                 {
                     Console.Write("You must enter a number, please try again: ");
                 }
-                catch (ValueOutOfRangeException valueOutOfRangeException)
+                catch(ValueOutOfRangeException valueOutOfRangeException)
                 {
                     Console.Write("That is too much energy, please try again: ");
                 }
             }
-            while (!isValidEnergyAmount);
+            while(!isValidEnergyAmount);
+        }
+
+        private void searchAndPresentVehicleByLicenseNumber()
+        {
+            string licenseNumber = receiveLicenseNumberInput();
+
+            if(r_Garage.CheckIfVehicleExistsInGarage(licenseNumber))
+            {
+                Console.WriteLine(r_Garage.PrintVehicleDetails(licenseNumber));
+            }
+            else
+            {
+                Console.WriteLine("There is no vehicle with this license number in the garage");
+            }
+        }
+
+        private void pauseAndPressEnterToContinue()
+        {
+            Console.Write("Press enter to return to the Main Menu");
+            Console.ReadLine();
+            Console.Clear();
+        }
+
+        private void terminateProgramMessage()
+        {
+            Console.Write("Shutting down, good bye..");
         }
     }
 }

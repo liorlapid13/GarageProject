@@ -11,7 +11,7 @@ namespace Ex03.GarageLogic
 
         public enum eColor
         {
-            Red=1,
+            Red = 1,
             White,
             Black,
             Silver
@@ -19,7 +19,7 @@ namespace Ex03.GarageLogic
 
         public enum eNumberOfDoors
         {
-            Two = 2,
+            Two = 1,
             Three,
             Four,
             Five
@@ -74,11 +74,11 @@ namespace Ex03.GarageLogic
 What color is your car? ");
             userDialogueStringList.Add(
 @"Vehicle Doors
-2   Two
-3   Three
-4   Four
-5   Five
-How many doors does your car have? ");
+1   Two
+2   Three
+3   Four
+4   Five
+Select car number of doors: ");
 
             return userDialogueStringList;
         }
@@ -98,10 +98,10 @@ How many doors does your car have? ");
                 switch (dialogueListIndex)
                 {
                     case eCarUserDialogueListIndex.Color:
-                        isValidInput = CheckEnumSelect<Car.eColor>(i_StringToCheck);
+                        isValidInput = CheckEnumSelect<eColor>(i_StringToCheck);
                         break;
                     case eCarUserDialogueListIndex.NumberOfDoors:
-                        isValidInput = CheckEnumSelect<Car.eNumberOfDoors>(i_StringToCheck);
+                        isValidInput = CheckEnumSelect<eNumberOfDoors>(i_StringToCheck);
                         break;
                 }
             }
@@ -138,13 +138,12 @@ How many doors does your car have? ");
             string carInformationOutput = string.Format(
 @"{0}
 Number of Wheels: {1}
-Car Information
 Color: {2}
 Number of Doors: {3}",
                 VehicleToString(),
                 ((int)eNumberOfWheels.Car).ToString(),
                 m_CarColor.ToString(),
-                (int)m_NumberOfDoors);
+                m_NumberOfDoors);
 
             return carInformationOutput;
         }

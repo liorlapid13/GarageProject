@@ -5,22 +5,22 @@ using Ex03.GarageLogic;
 
 namespace Ex03.ConsoleUI
 {
-    public static class InputValidation
+    internal static class Utilities
     {
-        public static bool CheckNameInput(string i_Name)
+        internal static bool CheckNameInput(string i_Name)
         {
             bool isValidName = true;
 
-            if (i_Name.Length == 0)
+            if(i_Name.Length == 0)
             {
                 Console.Write("You must enter a name, please try again: ");
                 isValidName = false;
             }
             else
             {
-                foreach (char c in i_Name)
+                foreach(char c in i_Name)
                 {
-                    if (!Char.IsLetter(c) && c != ' ')
+                    if(!char.IsLetter(c) && c != ' ')
                     {
                         Console.Write("Name must only include letters or spaces, please try again: ");
                         isValidName = false;
@@ -32,7 +32,7 @@ namespace Ex03.ConsoleUI
             return isValidName;
         }
 
-        public static bool CheckPhoneNumberInput(string i_PhoneNumber)
+        internal static bool CheckPhoneNumberInput(string i_PhoneNumber)
         {
             bool isValidPhoneNumber = true;
 
@@ -45,7 +45,7 @@ namespace Ex03.ConsoleUI
             {
                 foreach(char c in i_PhoneNumber)
                 {
-                    if(!Char.IsDigit(c)) 
+                    if(!char.IsDigit(c)) 
                     {
                         Console.Write("Phone number must include only digits, please try again: ");
                         isValidPhoneNumber = false;
@@ -57,7 +57,7 @@ namespace Ex03.ConsoleUI
             return isValidPhoneNumber;
         }
 
-        public static bool CheckLicenseNumberInput(string i_LicenseNumber)
+        internal static bool CheckLicenseNumberInput(string i_LicenseNumber)
         {
             bool isValidLicenseNumber = true;
 
@@ -82,54 +82,32 @@ namespace Ex03.ConsoleUI
             return isValidLicenseNumber;
         }
 
-        public static bool CheckAirPressureInput(
-            string i_CurrentAirPressure,
-            VehicleCreator.eSupportedVehicles i_VehicleType)
+        internal static bool IsInEnumRange<T>(int i_Selection)
         {
-            float airPressure;
-            bool isValidAirPressure = float.TryParse(i_CurrentAirPressure, out airPressure);
-
-            if(!isValidAirPressure)
-            {
-                Console.Write("You must enter a number, please try again: ");
-            }
-            else
-            {
-                string maxAirPressureString = Enum.GetName(typeof(VehicleCreator.eSupportedVehicles), i_VehicleType);
-                float maxAirPressure = (float)Enum.Parse(typeof(Wheel.eMaxAirPressure), maxAirPressureString);
-
-                if(airPressure > maxAirPressure)
-                {
-                    Console.Write("The maximum air pressure for your wheels is {0}, please try again: ", maxAirPressure);
-                    isValidAirPressure = false;
-                }
-            }
-
-            return isValidAirPressure;
+            return Enum.IsDefined(typeof(T), i_Selection);
         }
 
-        public static bool CheckEnergyAmount(string i_EnergyAmount, float i_MaxEnergyCapacity, string i_EnergyType)
+        internal static int ReceiveEnumInput<T>()
         {
-            float energyAmount;
-            bool isValidEnergyAmount = float.TryParse(i_EnergyAmount, out energyAmount);
+            int selectedOption = -1;
+            bool isValidInput = false;
 
-            if(!isValidEnergyAmount)
+            while(!isValidInput)
             {
-                Console.Write("You must enter a number, please try again: ");
-            }
-            else
-            {
-                if(energyAmount > i_MaxEnergyCapacity)
+                string userSelection = Console.ReadLine();
+
+                if(int.TryParse(userSelection, out selectedOption))
                 {
-                    Console.Write(
-                        "The maximum amount of {0} for your vehicle is {1}, please try again: ",
-                        i_EnergyType,
-                        i_MaxEnergyCapacity);
-                    isValidEnergyAmount = false;
+                    isValidInput = IsInEnumRange<T>(selectedOption);
+                }
+
+                if(!isValidInput)
+                {
+                    Console.Write("Invalid input, please try again: ");
                 }
             }
 
-            return isValidEnergyAmount;
+            return selectedOption;
         }
     }
 }

@@ -27,7 +27,6 @@ namespace Ex03.GarageLogic
         public Motorcycle(string i_LicenseNumber, Engine.eEngineType i_EngineType, float i_MaxEngineEnergyCapacity)
             : base(i_LicenseNumber, i_EngineType, i_MaxEngineEnergyCapacity)
         {
-            
         }
 
         public eLicenseType LicenseType
@@ -37,12 +36,14 @@ namespace Ex03.GarageLogic
                 return m_LicenseType;
             }
         }
+
         public int EngineCapacity
         {
             get
             {
                 return m_EngineCapacity;
             }
+
             set
             {
                 m_EngineCapacity = value;
@@ -77,18 +78,17 @@ What is your license type? ");
             {
                 eMotorcycleUserDialogueListIndex dialogueListIndex = (eMotorcycleUserDialogueListIndex)i_IndexInList;
 
-                switch (dialogueListIndex)
+                switch(dialogueListIndex)
                 {
                     case eMotorcycleUserDialogueListIndex.EngineCapacity:
                         isValidInput = checkEngineCapacityInput(i_StringToCheck);
                         break;
                     case eMotorcycleUserDialogueListIndex.LicenseType:
-                        isValidInput = CheckEnumSelect<eLicenseType>(i_StringToCheck);
+                        isValidInput = CheckVehicleEnumSelection<eLicenseType>(i_StringToCheck);
                         break;
                 }
             }
             
-
             return isValidInput;
         }
 
@@ -100,7 +100,7 @@ What is your license type? ");
             int licenseType = int.Parse(i_UserDialogueInputsList[(int)eMotorcycleUserDialogueListIndex.LicenseType]);
             GasEngine gasEngine = m_Engine as GasEngine;
 
-            if (gasEngine != null)
+            if(gasEngine != null)
             {
                 gasEngine.GasType = GasEngine.eGasType.Octan95;
             }

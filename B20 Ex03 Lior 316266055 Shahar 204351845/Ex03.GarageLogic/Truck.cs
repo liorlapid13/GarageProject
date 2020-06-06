@@ -21,7 +21,6 @@ namespace Ex03.GarageLogic
         public Truck(string i_LicenseNumber, Engine.eEngineType i_EngineType, float i_MaxEngineEnergyCapacity)
             : base(i_LicenseNumber, i_EngineType, i_MaxEngineEnergyCapacity)
         {
-           
         }
 
         public float LoadCapacity
@@ -76,7 +75,7 @@ Is your truck carrying hazardous goods? ");
             {
                 eTruckUserDialogueListIndex dialogueListIndex = (eTruckUserDialogueListIndex)i_IndexInList;
 
-                switch (dialogueListIndex)
+                switch(dialogueListIndex)
                 {
                     case eTruckUserDialogueListIndex.HazardousGoods:
                         isValidInput = checkHazardousGoodsInput(i_StringToCheck);
@@ -87,9 +86,9 @@ Is your truck carrying hazardous goods? ");
                 }
             }
             
-
             return isValidInput;
         }
+
         public override void UpdateProperties(List<string> i_UserDialogueInputsList)
         {
             base.UpdateProperties(i_UserDialogueInputsList);
@@ -131,12 +130,12 @@ Is your truck carrying hazardous goods? ");
             int userInput;
             bool isValidInput = int.TryParse(i_isCarryingHazardousGoods, out userInput);
 
-            if (!isValidInput)
+            if(!isValidInput)
             {
                 throw new FormatException("Failed parse: string->int");
             }
 
-            if (userInput != 1 && userInput != 2)
+            if(userInput != 1 && userInput != 2)
             {
                 throw new ValueOutOfRangeException(2, 1);
             }

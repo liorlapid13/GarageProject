@@ -19,7 +19,6 @@ namespace Ex03.GarageLogic
         public GasEngine(float i_MaxGasCapacity)
             : base(i_MaxGasCapacity)
         {
-            
         }
 
         public enum eGasCapacity
@@ -64,7 +63,6 @@ namespace Ex03.GarageLogic
 
         public override string ToString()
         {
-           
             string engineInformationOutput = string.Format(
 @"Gas Type: {0}
 Current Amount of Gas: {1} liters

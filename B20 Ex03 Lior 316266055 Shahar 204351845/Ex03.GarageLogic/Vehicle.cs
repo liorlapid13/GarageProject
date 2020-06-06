@@ -32,13 +32,12 @@ namespace Ex03.GarageLogic
         {
             r_LicenseNumber = i_LicenseNumber;
 
-            switch (i_EngineType)
+            switch(i_EngineType)
             {
                 case Engine.eEngineType.Electric:
                     m_Engine = new ElectricEngine(i_MaxEngineEnergyCapacity);
                     break;
                 case Engine.eEngineType.Gas:
-                    //GasEngine.eGasType gasType = (GasEngine.eGasType)Enum.Parse(typeof(GasEngine.eGasType), GetType().Name);
                     m_Engine = new GasEngine(i_MaxEngineEnergyCapacity);
                     break;
             }
@@ -140,7 +139,7 @@ namespace Ex03.GarageLogic
 
         private bool checkWheelManufacturer(string i_WheelManufacture)
         {
-            if (string.IsNullOrEmpty(i_WheelManufacture))
+            if(string.IsNullOrEmpty(i_WheelManufacture))
             {
                 throw new ArgumentException("You entered a empty string,please try again");
             }
@@ -148,11 +147,11 @@ namespace Ex03.GarageLogic
             return true;
         }
 
-        public bool CheckEnumSelect<T>(string i_EngineSelect)
+        public bool CheckVehicleEnumSelection<T>(string i_enumSelection)
         {
-            int selection = int.Parse(i_EngineSelect);
+            int enumSelection = int.Parse(i_enumSelection);
 
-            if(!Enum.IsDefined(typeof(T), selection))
+            if(!Enum.IsDefined(typeof(T), enumSelection))
             {
                 throw new ValueOutOfRangeException(Enum.GetValues(typeof(T)).Length, 1);
             }
@@ -165,7 +164,6 @@ namespace Ex03.GarageLogic
             m_ModelName = i_UserDialogueInputsList[(int)eVehicleUserDialogueListIndex.ModelName];
             m_Engine.CurrentEnergy = float.Parse(
                 i_UserDialogueInputsList[(int)eVehicleUserDialogueListIndex.CurrentEnergyAmount]);
-
             m_EnergyPercentageLeft = m_Engine.CurrentEnergy / m_Engine.MaxEnergyCapacity * 100;
         }
 

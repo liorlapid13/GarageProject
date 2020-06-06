@@ -7,12 +7,12 @@ using Ex03.GarageLogic;
 
 namespace Ex03.ConsoleUI
 {
-    public class UserInterface
+    internal class UserInterface
     {
         private const int k_TerminateProgram = 8;
         private readonly Garage r_Garage;
 
-        public enum eGarageActions
+        internal enum eGarageActions
         {
             InsertNewVehicle = 1,
             ShowAllLicensePlatesOfVehiclesInGarage,
@@ -24,17 +24,17 @@ namespace Ex03.ConsoleUI
             ExitProgram
         }
 
-        public UserInterface()
+        internal UserInterface()
         {
             r_Garage = new Garage();
         }
 
-        public void StartProgram()
+        internal void StartProgram()
         {
-            MainMenu();
+            mainMenu();
         }
 
-        public void MainMenu()
+        private void mainMenu()
         {
             bool terminateProgram = false;
 
@@ -42,9 +42,9 @@ namespace Ex03.ConsoleUI
             {
                 presentUserMenu();
 
-                int menuOption = receiveEnumInput<eGarageActions>();
+                int menuOption = Utilities.ReceiveEnumInput<eGarageActions>();
 
-                if (menuOption == k_TerminateProgram)
+                if(menuOption == k_TerminateProgram)
                 {
                     terminateProgram = true;
                 }
@@ -98,9 +98,9 @@ namespace Ex03.ConsoleUI
             do
             {
                 licenseNumber = Console.ReadLine();
-                isValidLicenseNumber = InputValidation.CheckLicenseNumberInput(licenseNumber);
+                isValidLicenseNumber = Utilities.CheckLicenseNumberInput(licenseNumber);
             }
-            while (!isValidLicenseNumber);
+            while(!isValidLicenseNumber);
 
             return licenseNumber;
         }
@@ -115,8 +115,7 @@ namespace Ex03.ConsoleUI
             {
                 Console.Write("Name: ");
                 ownerName = Console.ReadLine();
-                isValidName = InputValidation.CheckNameInput(ownerName);
-                
+                isValidName = Utilities.CheckNameInput(ownerName);
             }
             while(!isValidName);
 
@@ -126,7 +125,7 @@ namespace Ex03.ConsoleUI
             {
                 Console.Write("Phone number: ");
                 ownerPhoneNumber = Console.ReadLine();
-                isValidPhoneNumber = InputValidation.CheckPhoneNumberInput(ownerPhoneNumber);
+                isValidPhoneNumber = Utilities.CheckPhoneNumberInput(ownerPhoneNumber);
             }
             while(!isValidPhoneNumber);
 
@@ -148,39 +147,11 @@ namespace Ex03.ConsoleUI
 What would you like to do? ");
         }
 
-        private int receiveEnumInput<T>()
-        {
-            int selectedOption = -1;
-            bool isValidInput = false;
-
-            while(!isValidInput)
-            {
-                string userSelection = Console.ReadLine();
-
-                if(int.TryParse(userSelection, out selectedOption))
-                {
-                    isValidInput = isInEnumRange<T>(selectedOption);
-                }
-
-                if(!isValidInput)
-                {
-                    Console.Write("Invalid input, please try again: ");
-                }
-            }
-
-            return selectedOption;
-        }
-
-        private bool isInEnumRange<T>(int i_Selection)
-        {
-            return Enum.IsDefined(typeof(T), i_Selection);
-        }
-
         private void addNewVehicleToGarage()
         {
             string licenseNumber = receiveLicenseNumberInput();
 
-            if (r_Garage.CheckIfVehicleExistsInGarage(licenseNumber))
+            if(r_Garage.CheckIfVehicleExistsInGarage(licenseNumber))
             {
                 Console.WriteLine("The Vehicle you entered already exists in the garage");
                 r_Garage.ChangeVehicleStatus(licenseNumber, Garage.VehicleInformation.eVehicleStatus.InService);
@@ -208,7 +179,7 @@ What would you like to do? ");
 {0}Please select vehicle type: ",
                 vehicleTypesOutputMessage);
 
-            int selectedVehicleType = receiveEnumInput<VehicleCreator.eSupportedVehicles>();
+            int selectedVehicleType = Utilities.ReceiveEnumInput<VehicleCreator.eSupportedVehicles>();
 
             Vehicle newVehicle = VehicleCreator.CreateNewVehicle(
                 i_LicenseNumber,
@@ -242,11 +213,11 @@ What would you like to do? ");
                             userDialogueInputsList.Add(userInput);
                         }
                     }
-                    catch (FormatException formatException)
+                    catch(FormatException formatException)
                     {
                         Console.Write("Invalid input, please try again: ");
                     }
-                    catch (ValueOutOfRangeException valueOutOfRangeException)
+                    catch(ValueOutOfRangeException valueOutOfRangeException)
                     {
                         Console.Write("You must enter a number between {0} and {1}: ", valueOutOfRangeException.MinValue, valueOutOfRangeException.MaxValue);
                     }
@@ -279,7 +250,7 @@ Please select a filter option: ");
                 {
                     Console.Write("You must enter a number, please try again: ");
                 }
-                else if(!isInEnumRange<Garage.VehicleInformation.eVehicleStatus>(userSelectionInt))
+                else if(!Utilities.IsInEnumRange<Garage.VehicleInformation.eVehicleStatus>(userSelectionInt))
                 {
                     if(userSelection == "4")
                     {
@@ -302,7 +273,7 @@ Please select a filter option: ");
 
         private void presentAllLicensePlatesOfVehiclesInGarage(Garage.VehicleInformation.eVehicleStatus? i_VehicleStatusToPresent)
         {
-            if (!i_VehicleStatusToPresent.HasValue)
+            if(!i_VehicleStatusToPresent.HasValue)
             {
                 Console.WriteLine("All vehicles in garage:");
                 foreach(KeyValuePair<string, Garage.VehicleInformation> vehicleInformation in r_Garage.VehicleDictionary)
@@ -335,7 +306,7 @@ Please select a filter option: ");
 2   Repaired
 3   Paid
 Please select desired status: ");
-                int userSelection = receiveEnumInput<Garage.VehicleInformation.eVehicleStatus>();
+                int userSelection = Utilities.ReceiveEnumInput<Garage.VehicleInformation.eVehicleStatus>();
 
                 r_Garage.ChangeVehicleStatus(licenseNumber, (Garage.VehicleInformation.eVehicleStatus)userSelection);
                 Console.WriteLine("Vehicle status is now {0}", (Garage.VehicleInformation.eVehicleStatus)userSelection);
@@ -407,7 +378,7 @@ Please select gas type: ");
             {
                 try
                 {
-                    int gasType = receiveEnumInput<GasEngine.eGasType>();
+                    int gasType = Utilities.ReceiveEnumInput<GasEngine.eGasType>();
                     i_Engine.CheckGasType((GasEngine.eGasType)gasType);
                     isValidGasType = true;
                 }

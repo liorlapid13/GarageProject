@@ -16,7 +16,6 @@ namespace Ex03.GarageLogic
         public ElectricEngine(float i_MaxEnergyCapacityInMinutes)
             : base(i_MaxEnergyCapacityInMinutes / 60)
         {
-
         }
 
         public override void AddEnergy(float i_ChargeDurationInMinutes)

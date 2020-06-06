@@ -34,7 +34,6 @@ namespace Ex03.GarageLogic
         public Car(string i_LicenseNumber, Engine.eEngineType i_EngineType, float i_MaxEngineEnergyCapacity)
             : base(i_LicenseNumber, i_EngineType, i_MaxEngineEnergyCapacity)
         {
-
         }
 
         public eNumberOfDoors NumberOfDoors
@@ -49,12 +48,14 @@ namespace Ex03.GarageLogic
                 m_NumberOfDoors = value;
             }
         }
+
         public eColor CarColor
         {
             get
             {
                 return m_CarColor;
             }
+
             set
             {
                 m_CarColor = value;
@@ -95,13 +96,13 @@ Select car number of doors: ");
             {
                 eCarUserDialogueListIndex dialogueListIndex = (eCarUserDialogueListIndex)i_IndexInList;
 
-                switch (dialogueListIndex)
+                switch(dialogueListIndex)
                 {
                     case eCarUserDialogueListIndex.Color:
-                        isValidInput = CheckEnumSelect<eColor>(i_StringToCheck);
+                        isValidInput = CheckVehicleEnumSelection<eColor>(i_StringToCheck);
                         break;
                     case eCarUserDialogueListIndex.NumberOfDoors:
-                        isValidInput = CheckEnumSelect<eNumberOfDoors>(i_StringToCheck);
+                        isValidInput = CheckVehicleEnumSelection<eNumberOfDoors>(i_StringToCheck);
                         break;
                 }
             }
@@ -148,6 +149,4 @@ Number of Doors: {3}",
             return carInformationOutput;
         }
     }
-
 }
-   

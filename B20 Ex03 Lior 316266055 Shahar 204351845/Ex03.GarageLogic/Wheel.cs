@@ -17,7 +17,6 @@ namespace Ex03.GarageLogic
             Car = 32
         }
 
-        
         public Wheel(float i_MaxAirPressure, float i_CurrentAirPressure, string i_Manufacturer)
         {
             r_MaxAirPressure = i_MaxAirPressure;
@@ -66,7 +65,6 @@ namespace Ex03.GarageLogic
 
         public override string ToString()
         {
-           
             string wheelInformationOutput = string.Format(
  @"Manufacturer: {0}
 Current Air Pressure: {1}

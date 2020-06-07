@@ -40,6 +40,11 @@ namespace Ex03.GarageLogic
                 m_CurrentEnergy = value;
             }
         }
+
+        public bool IsEngineFull()
+        {
+            return m_CurrentEnergy == r_MaxEnergyCapacity;
+        }
         
         public abstract void AddEnergy(float i_AmountOfEnergyToAdd);
 

@@ -111,9 +111,9 @@ namespace Ex03.ConsoleUI
             bool isValidName, isValidPhoneNumber;
             string ownerName, ownerPhoneNumber;
 
+            Console.Write("Name: ");
             do
             {
-                Console.Write("Name: ");
                 ownerName = Console.ReadLine();
                 isValidName = Utilities.CheckNameInput(ownerName);
             }
@@ -121,9 +121,9 @@ namespace Ex03.ConsoleUI
 
             o_OwnerName = ownerName;
 
+            Console.Write("Phone number: ");
             do
             {
-                Console.Write("Phone number: ");
                 ownerPhoneNumber = Console.ReadLine();
                 isValidPhoneNumber = Utilities.CheckPhoneNumberInput(ownerPhoneNumber);
             }
@@ -139,7 +139,7 @@ namespace Ex03.ConsoleUI
 1   Insert a new vehicle
 2   Show all vehicles
 3   Change vehicle status
-4   Inflate tires to maximum
+4   Inflate wheels to maximum
 5   Refuel vehicle
 6   Recharge vehicle
 7   Display vehicle information
@@ -153,7 +153,7 @@ What would you like to do? ");
 
             if(r_Garage.CheckIfVehicleExistsInGarage(licenseNumber))
             {
-                Console.WriteLine("The Vehicle you entered already exists in the garage");
+                Console.WriteLine("This vehicle is already registered in the garage, welcome back!");
                 r_Garage.ChangeVehicleStatus(licenseNumber, Garage.VehicleInformation.eVehicleStatus.InService);
             }
             else
@@ -349,8 +349,15 @@ Please select desired status: ");
 
                 if(vehicleEngine != null)
                 {
-                    receiveFuelInputAndRefuelVehicle(vehicleEngine);
-                    Console.WriteLine("Vehicle refueled successfully");
+                    if(!vehicleEngine.IsEngineFull())
+                    {
+                        receiveFuelInputAndRefuelVehicle(vehicleEngine);
+                        Console.WriteLine("Vehicle refueled successfully");
+                    }
+                    else
+                    {
+                        Console.WriteLine("The vehicle is already full of gas");
+                    }
                 }
                 else
                 {
@@ -431,8 +438,15 @@ How much gas would you like to add? ",
 
                 if(vehicleEngine != null)
                 {
-                    receiveEnergyInputAndChargeVehicle(vehicleEngine);
-                    Console.WriteLine("Vehicle charged successfully");
+                    if(!vehicleEngine.IsEngineFull())
+                    {
+                        receiveEnergyInputAndChargeVehicle(vehicleEngine);
+                        Console.WriteLine("Vehicle charged successfully");
+                    }
+                    else
+                    {
+                        Console.WriteLine("The vehicle is already fully charged");
+                    }
                 }
                 else
                 {

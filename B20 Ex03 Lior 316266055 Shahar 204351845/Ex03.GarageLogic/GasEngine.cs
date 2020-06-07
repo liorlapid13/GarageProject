@@ -16,16 +16,16 @@ namespace Ex03.GarageLogic
             Octan98
         }
 
-        public GasEngine(float i_MaxGasCapacity)
-            : base(i_MaxGasCapacity)
-        {
-        }
-
         public enum eGasCapacity
         {
             Motorcycle = 7,
             Car = 60, 
             Truck = 120
+        }
+
+        public GasEngine(float i_MaxGasCapacity)
+            : base(i_MaxGasCapacity)
+        {
         }
 
         public eGasType GasType

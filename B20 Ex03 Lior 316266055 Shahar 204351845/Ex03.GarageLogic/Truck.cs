@@ -117,7 +117,7 @@ Is your truck carrying hazardous goods? ");
                 throw new FormatException("Failed parse: string->float");
             }
 
-            if(loadCapacity > k_MaxLoadCapacity)
+            if(loadCapacity > k_MaxLoadCapacity || loadCapacity < 0)
             {
                 throw new ValueOutOfRangeException(k_MaxLoadCapacity, 0);
             }

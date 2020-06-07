@@ -125,7 +125,7 @@ What is your license type? ");
                 throw new FormatException("Failed parse: string->float");
             }
 
-            if(engineCapacity <= 0)
+            if(engineCapacity > k_MaxEngineCapacity || engineCapacity <= 0)
             {
                 throw new ValueOutOfRangeException(k_MaxEngineCapacity, 1);
             }

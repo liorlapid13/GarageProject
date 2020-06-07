@@ -38,7 +38,7 @@ namespace Ex03.ConsoleUI
 
             if(i_PhoneNumber.Length != 10) 
             {
-                Console.Write("Phone number must be 10-digits long, please try again: ");
+                Console.Write("Phone number must be 10 numbers, please try again: ");
                 isValidPhoneNumber = false;
             }
             else
@@ -47,7 +47,7 @@ namespace Ex03.ConsoleUI
                 {
                     if(!char.IsDigit(c)) 
                     {
-                        Console.Write("Phone number must include only digits, please try again: ");
+                        Console.Write("Phone number must include only numbers, please try again: ");
                         isValidPhoneNumber = false;
                         break;
                     }

@@ -177,7 +177,7 @@ namespace Ex03.GarageLogic
                 throw new FormatException("Failed parse: string->float");
             }
 
-            if(currentEnergyAmount > m_Engine.MaxEnergyCapacity)
+            if(currentEnergyAmount > m_Engine.MaxEnergyCapacity || currentEnergyAmount < 0)
             {
                 throw new ValueOutOfRangeException(m_Engine.MaxEnergyCapacity, 0);
             }
@@ -198,7 +198,7 @@ namespace Ex03.GarageLogic
             string vehicleType = this.GetType().Name;
             Wheel.eMaxAirPressure maxAirPressure = (Wheel.eMaxAirPressure)Enum.Parse(typeof(Wheel.eMaxAirPressure), vehicleType);
 
-            if(currentAirPressure > (float)maxAirPressure) 
+            if(currentAirPressure > (float)maxAirPressure || currentAirPressure < 0) 
             {
                 throw new ValueOutOfRangeException((float)maxAirPressure, 0);
             }

@@ -1,23 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Ex03.GarageLogic
 {
     public class Garage
     {
-        private Dictionary<string, VehicleInformation> m_VehiclesInGarage;
+        private readonly Dictionary<string, VehicleInformation> r_VehiclesInGarage;
 
         public Garage()
         {
-            m_VehiclesInGarage = new Dictionary<string, VehicleInformation>();
+            r_VehiclesInGarage = new Dictionary<string, VehicleInformation>();
         }
 
         public Dictionary<string, VehicleInformation> VehicleDictionary
         {
             get
             {
-                return m_VehiclesInGarage;
+                return r_VehiclesInGarage;
             }
         }
 
@@ -26,25 +24,25 @@ namespace Ex03.GarageLogic
             VehicleInformation newVehicleInformation =
                 new VehicleInformation(i_OwnerName, i_OwnerPhoneNumber, i_Vehicle);
 
-            m_VehiclesInGarage.Add(i_LicenseNumber, newVehicleInformation);
+            r_VehiclesInGarage.Add(i_LicenseNumber, newVehicleInformation);
         }
 
         public bool CheckIfVehicleExistsInGarage(string i_LicenseNumber)
         {
-            return m_VehiclesInGarage.ContainsKey(i_LicenseNumber);
+            return r_VehiclesInGarage.ContainsKey(i_LicenseNumber);
         }
 
         public void ChangeVehicleStatus(string i_LicenseNumber, VehicleInformation.eVehicleStatus i_NewVehicleStatus)
         {
-            if(i_NewVehicleStatus != m_VehiclesInGarage[i_LicenseNumber].VehicleStatus)
+            if(i_NewVehicleStatus != r_VehiclesInGarage[i_LicenseNumber].VehicleStatus)
             {
-                m_VehiclesInGarage[i_LicenseNumber].VehicleStatus = i_NewVehicleStatus;
+                r_VehiclesInGarage[i_LicenseNumber].VehicleStatus = i_NewVehicleStatus;
             }
         }
 
-        public string PrintVehicleDetails(string licenseNumber)
+        public string CreateVehicleDetailsString(string i_LicenseNumber)
         {
-            return m_VehiclesInGarage[licenseNumber].ToString();
+            return r_VehiclesInGarage[i_LicenseNumber].ToString();
         }
 
         public class VehicleInformation

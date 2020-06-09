@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Ex03.GarageLogic
 {
@@ -117,7 +115,6 @@ Select car number of doors: ");
                 i_UserDialogueInputsList[(int)eVehicleUserDialogueListIndex.CurrentWheelAirPressure]);
             int numberOfDoors = int.Parse(i_UserDialogueInputsList[(int)eCarUserDialogueListIndex.NumberOfDoors]);
             int carColor = int.Parse(i_UserDialogueInputsList[(int)eCarUserDialogueListIndex.Color]);
-
             GasEngine gasEngine = m_Engine as GasEngine;
 
             if(gasEngine != null)

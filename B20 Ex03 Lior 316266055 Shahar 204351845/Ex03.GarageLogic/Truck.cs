@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Text;
 
 namespace Ex03.GarageLogic
 {
@@ -125,10 +123,10 @@ Is your truck carrying hazardous goods? ");
             return true;
         }
 
-        private bool checkHazardousGoodsInput(string i_isCarryingHazardousGoods)
+        private bool checkHazardousGoodsInput(string i_IsCarryingHazardousGoods)
         {
             int userInput;
-            bool isValidInput = int.TryParse(i_isCarryingHazardousGoods, out userInput);
+            bool isValidInput = int.TryParse(i_IsCarryingHazardousGoods, out userInput);
 
             if(!isValidInput)
             {
@@ -146,7 +144,6 @@ Is your truck carrying hazardous goods? ");
         public override string ToString()
         {
             string isCarryingHazardousGoods = m_IsCarryingHazardousMaterials ? "Yes" : "No";
-
             string truckInformationOutput = string.Format(
 @"{0}
 Number of Wheels: {1}

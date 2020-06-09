@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography;
 using System.Text;
 using Ex03.GarageLogic;
 
@@ -57,10 +55,10 @@ namespace Ex03.ConsoleUI
             }
         }
 
-        private void performGarageAction(eGarageActions userMenuSelection)
+        private void performGarageAction(eGarageActions i_UserMenuSelection)
         {
             Console.Clear();
-            switch(userMenuSelection)
+            switch(i_UserMenuSelection)
             {
                 case eGarageActions.InsertNewVehicle:
                     addNewVehicleToGarage();
@@ -178,9 +176,7 @@ What would you like to do? ");
 @"Vehicle Types
 {0}Please select vehicle type: ",
                 vehicleTypesOutputMessage);
-
             int selectedVehicleType = Utilities.ReceiveEnumInput<VehicleCreator.eSupportedVehicles>();
-
             Vehicle newVehicle = VehicleCreator.CreateNewVehicle(
                 i_LicenseNumber,
                 (VehicleCreator.eSupportedVehicles)selectedVehicleType);
@@ -409,6 +405,7 @@ How much gas would you like to add? ",
                 {
                     string amountOfGasInput = Console.ReadLine();
                     float amountOfGasToAdd = float.Parse(amountOfGasInput);
+
                     i_Engine.AddEnergy(amountOfGasToAdd);
                     isValidGasAmount = true;
                 }
@@ -474,6 +471,7 @@ For how many minutes would you like to charge the vehicle? ",
                 {
                     string amountOfEnergyInput = Console.ReadLine();
                     float amountOfEnergyToAdd = float.Parse(amountOfEnergyInput);
+
                     i_Engine.AddEnergy(amountOfEnergyToAdd);
                     isValidEnergyAmount = true;
                 }
@@ -499,7 +497,7 @@ For how many minutes would you like to charge the vehicle? ",
 
             if(r_Garage.CheckIfVehicleExistsInGarage(licenseNumber))
             {
-                Console.WriteLine(r_Garage.PrintVehicleDetails(licenseNumber));
+                Console.WriteLine(r_Garage.CreateVehicleDetailsString(licenseNumber));
             }
             else
             {

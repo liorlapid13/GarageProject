@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
 
 namespace Ex03.GarageLogic
 {
@@ -147,9 +145,9 @@ namespace Ex03.GarageLogic
             return true;
         }
 
-        public bool CheckVehicleEnumSelection<T>(string i_enumSelection)
+        public bool CheckVehicleEnumSelection<T>(string i_EnumSelection)
         {
-            int enumSelection = int.Parse(i_enumSelection);
+            int enumSelection = int.Parse(i_EnumSelection);
 
             if(!Enum.IsDefined(typeof(T), enumSelection))
             {
